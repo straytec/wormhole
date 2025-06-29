@@ -22,7 +22,7 @@ export const useCameraAnimation = (
 
     // Start animation
     const startTime = Date.now();
-    const duration = 2000; // 2 seconds for smoother animation
+    const duration = 1500; // 1.5 seconds for smooth but not too slow animation
     const startPosition = { ...animatedPosition };
 
     const animate = () => {

@@ -43,23 +43,26 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
     const body = celestialBodies.find(b => b.id === bodyId);
     if (!body) return;
     
-    const state = get();
+    // Clear any existing selection first
+    set({ selectedBody: null });
+    
     set({
-      cameraPosition: state.targetPosition, // Sync current position
       targetPosition: { 
         x: body.position_x, 
         y: body.position_y, 
         z: 20 // Closer zoom for better focus
       },
-      selectedBody: bodyId,
       viewMode: 'focused',
       isAnimating: true
     });
+    
+    // Set selection after a brief delay to ensure animation starts
+    setTimeout(() => {
+      set({ selectedBody: bodyId });
+    }, 100);
   },
   resetView: () => {
-    const state = get();
     set({
-      cameraPosition: state.targetPosition, // Sync current position
       targetPosition: { x: 0, y: 0, z: 100 },
       selectedBody: null,
       viewMode: 'overview',

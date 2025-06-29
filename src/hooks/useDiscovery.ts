@@ -3,43 +3,37 @@ import { useUniverseStore } from '../stores/universe';
 
 export const useDiscovery = () => {
   const { data: celestialBodies = [] } = useCelestialBodies();
-  const { setTargetPosition, setSelectedBody, setIsAnimating, setViewMode } = useUniverseStore();
+  const { 
+    setCameraPosition, 
+    setTargetPosition, 
+    setSelectedBody, 
+    setIsAnimating, 
+    setViewMode,
+    cameraPosition 
+  } = useUniverseStore();
 
   const animateToBody = (body: any, zoomLevel: number = 25) => {
-    // Smooth multi-stage animation
+    // Clear any existing selection first
+    setSelectedBody(null);
+    
+    // Sync camera position with current target position
+    setCameraPosition(cameraPosition);
+    
+    // Set the target directly to the body
+    setTargetPosition({
+      x: body.position_x,
+      y: body.position_y,
+      z: zoomLevel,
+    });
+    
+    // Start animation and set view mode
     setIsAnimating(true);
     setViewMode('focused');
     
-    // Stage 1: Zoom out slightly for better transition
-    setTargetPosition({
-      x: body.position_x * 0.3, // Ease into the area
-      y: body.position_y * 0.3,
-      z: 80,
-    });
-
-    // Stage 2: Move closer to the target
-    setTimeout(() => {
-      setTargetPosition({
-        x: body.position_x * 0.7,
-        y: body.position_y * 0.7,
-        z: 50,
-      });
-    }, 500);
-
-    // Stage 3: Final zoom to the body
-    setTimeout(() => {
-      setTargetPosition({
-        x: body.position_x,
-        y: body.position_y,
-        z: zoomLevel,
-      });
-    }, 1000);
-
-    // Stage 4: Select and highlight the body
+    // Select the body after a short delay to ensure animation starts
     setTimeout(() => {
       setSelectedBody(body.id);
-      setIsAnimating(false);
-    }, 2000);
+    }, 100);
 
     return body;
   };

@@ -57,13 +57,7 @@ export const UniverseCanvas: React.FC = () => {
     cameraPosition, 
     targetPosition, 
     isAnimating, 
-    (animating) => {
-      setIsAnimating(animating);
-      // Clear selection when animation completes and we're not focusing on a specific body
-      if (!animating && viewMode === 'overview') {
-        setTimeout(() => setSelectedBody(null), 500);
-      }
-    }
+    setIsAnimating
   );
   
   // Use dragging hook
