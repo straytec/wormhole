@@ -263,7 +263,7 @@ export const UniverseCanvas: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 1 }}
-        className="fixed bottom-4 right-4 z-20"
+        className="fixed bottom-4 right-32 z-20"
       >
         <a
           href="https://bolt.new"
