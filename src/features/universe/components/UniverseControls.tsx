@@ -1,0 +1,200 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut } from 'lucide-react';
+import { Button } from '../../../components/ui/Button';
+import { useUniverseStore } from '../../../stores/universe';
+import { CelestialBody } from '../../../hooks/useCelestialBodies';
+import { DiscoveryModal } from './DiscoveryModal';
+
+interface UniverseControlsProps {
+  celestialBodies: CelestialBody[];
+  onZoomToContent: (contentType: string) => void;
+}
+
+export const UniverseControls: React.FC<UniverseControlsProps> = ({
+  celestialBodies,
+  onZoomToContent,
+}) => {
+  const { 
+    setAddingContent, 
+    targetPosition,
+    setCameraPosition,
+    setTargetPosition,
+    setIsAnimating,
+    resetView,
+    viewMode
+  } = useUniverseStore();
+  
+  const [showDiscovery, setShowDiscovery] = React.useState(false);
+
+  const contentTypeCounts = celestialBodies.reduce((acc, body) => {
+    acc[body.content_type] = (acc[body.content_type] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const handleZoomIn = () => {
+    setCameraPosition(targetPosition); // Sync positions
+    setTargetPosition({
+      ...targetPosition,
+      z: Math.max(targetPosition.z * 0.7, 15)
+    });
+    setIsAnimating(true);
+  };
+
+  const handleZoomOut = () => {
+    setCameraPosition(targetPosition); // Sync positions
+    setTargetPosition({
+      ...targetPosition,
+      z: Math.min(targetPosition.z * 1.4, 200)
+    });
+    setIsAnimating(true);
+  };
+
+  return (
+    <>
+      {/* Main Action Buttons - Bottom Right */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-30">
+        {/* Discover Button */}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button
+            variant="stellar"
+            size="lg"
+            onClick={() => setShowDiscovery(true)}
+            className="w-16 h-16 rounded-full p-0 shadow-2xl border-2 border-stellar-300"
+            title="Discover your universe"
+          >
+            <Dices className="w-8 h-8" />
+          </Button>
+        </motion.div>
+
+        {/* Add Content Button */}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button
+            variant="cosmic"
+            size="lg"
+            onClick={() => setAddingContent(true)}
+            className="w-16 h-16 rounded-full p-0 shadow-2xl border-2 border-cosmic-300"
+            title="Add content to universe"
+          >
+            <Plus className="w-8 h-8" />
+          </Button>
+        </motion.div>
+      </div>
+
+      {/* Navigation Controls - Bottom Left */}
+      <div className="fixed bottom-8 left-8 flex flex-col gap-3 z-30">
+        {/* Zoom Controls */}
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="stellar"
+            size="sm"
+            onClick={handleZoomIn}
+            className="w-12 h-12 rounded-full p-0"
+            title="Zoom In"
+          >
+            <ZoomIn className="w-5 h-5" />
+          </Button>
+          <Button
+            variant="stellar"
+            size="sm"
+            onClick={handleZoomOut}
+            className="w-12 h-12 rounded-full p-0"
+            title="Zoom Out"
+          >
+            <ZoomOut className="w-5 h-5" />
+          </Button>
+          <Button
+            variant="stellar"
+            size="sm"
+            onClick={resetView}
+            className="w-12 h-12 rounded-full p-0"
+            title="Reset View"
+          >
+            <Home className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Content Type Navigation - Top Right */}
+      {celestialBodies.length > 0 && (
+        <div className="fixed top-8 right-8 z-30">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-cosmic-900/80 backdrop-blur-lg border border-cosmic-700 rounded-xl p-4 shadow-2xl"
+          >
+            <h3 className="text-white font-medium mb-3 text-sm">Navigate Universe</h3>
+            <div className="space-y-2">
+              {Object.entries(contentTypeCounts).map(([type, count]) => (
+                <button
+                  key={type}
+                  onClick={() => onZoomToContent(type)}
+                  className={`
+                    flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-colors
+                    ${viewMode === 'zone' ? 'text-stellar-200 bg-cosmic-800' : 'text-cosmic-200 hover:text-white hover:bg-cosmic-800'}
+                  `}
+                >
+                  <div className="flex items-center gap-2">
+                    <span>
+                      {type === 'movie' ? '🎬' : 
+                       type === 'book' ? '📚' : 
+                       type === 'album' ? '🎵' : 
+                       type === 'game' ? '🎮' : 
+                       type === 'studying' ? '🎓' : 
+                       type === 'work' ? '💼' : '⭐'}
+                    </span>
+                    <span className="capitalize">{type}s</span>
+                  </div>
+                  <span className="text-cosmic-400 text-xs">{count}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Universe Stats - Top Left */}
+      {celestialBodies.length > 0 && (
+        <div className="fixed top-8 left-8 z-30">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-cosmic-900/80 backdrop-blur-lg border border-cosmic-700 rounded-xl p-4 shadow-2xl"
+          >
+            <h3 className="text-white font-medium mb-2 text-sm">Your Universe</h3>
+            <div className="space-y-1 text-xs">
+              <div className="flex justify-between text-cosmic-200">
+                <span>Total Bodies:</span>
+                <span className="text-white">{celestialBodies.length}</span>
+              </div>
+              <div className="flex justify-between text-cosmic-200">
+                <span>Singularities:</span>
+                <span className="text-purple-300">
+                  {celestialBodies.filter(b => b.is_singularity).length}
+                </span>
+              </div>
+              <div className="flex justify-between text-cosmic-200">
+                <span>High Impact:</span>
+                <span className="text-stellar-300">
+                  {celestialBodies.filter(b => b.has_impact).length}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+      
+      {/* Discovery Modal */}
+      <DiscoveryModal 
+        isOpen={showDiscovery}
+        onClose={() => setShowDiscovery(false)}
+      />
+    </>
+  );
+};
