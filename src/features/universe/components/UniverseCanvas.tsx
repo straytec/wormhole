@@ -16,6 +16,7 @@ import { ConstellationBirthEffect } from '../../constellation/components/Constel
 import { ConstellationInfoPanel } from '../../constellation/components/ConstellationInfoPanel';
 import { ConstellationAtlas } from '../../constellation/components/ConstellationAtlas';
 import { useConstellationInteraction } from '../../constellation/hooks/useConstellationInteraction';
+import { GalacticCollisionEffect } from '../../galactic-collision/components/GalacticCollisionEffect';
 
 export const UniverseCanvas: React.FC = () => {
   const { 
@@ -208,6 +209,9 @@ export const UniverseCanvas: React.FC = () => {
             
             {/* Constellation Lines */}
             <ConstellationLines activeConstellationId={activeConstellationId} />
+            
+            {/* Galactic Collision Effects */}
+            <GalacticCollisionEffect />
             
             {/* Enhanced Individual Celestial Bodies */}
             {celestialBodies.map((body) => {

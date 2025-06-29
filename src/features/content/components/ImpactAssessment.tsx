@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Zap } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useCreateCelestialBody } from '../../../hooks/useCelestialBodies';
+import { useGenreDetection } from '../../galactic-collision/hooks/useGenreDetection';
 
 interface ImpactAssessmentProps {
   candidate: any;
@@ -18,6 +19,11 @@ export const ImpactAssessment: React.FC<ImpactAssessmentProps> = ({
   const [hasImpact, setHasImpact] = useState(false);
   const [isSingularity, setIsSingularity] = useState(false);
   const createCelestialBody = useCreateCelestialBody();
+  const { detectHybridGenres, isSignificantHybrid } = useGenreDetection();
+  
+  // Detect if this is a hybrid genre work
+  const hybridTypes = detectHybridGenres(candidate);
+  const isHybrid = isSignificantHybrid(hybridTypes);
 
   const handleComplete = () => {
     createCelestialBody.mutate({
@@ -66,6 +72,16 @@ export const ImpactAssessment: React.FC<ImpactAssessmentProps> = ({
           <p className="text-cosmic-300">
             How will this knowledge shape your universe?
           </p>
+          {isHybrid && (
+            <div className="mt-2 px-3 py-1 bg-purple-900/30 border border-purple-400/50 rounded-lg">
+              <p className="text-purple-200 text-sm">
+                🌌 Hybrid Genre Detected - This will trigger a galactic collision!
+              </p>
+              <p className="text-purple-300 text-xs mt-1">
+                Genres: {hybridTypes.join(', ')}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
