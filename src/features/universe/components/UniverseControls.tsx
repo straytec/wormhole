@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope } from 'lucide-react';
+import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useUniverseStore } from '../../../stores/universe';
 import { CelestialBody } from '../../../hooks/useCelestialBodies';
@@ -19,6 +19,8 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
 }) => {
   const { 
     setAddingContent, 
+    showKnowledgeMetrics,
+    setShowKnowledgeMetrics,
     targetPosition,
     setCameraPosition,
     setTargetPosition,
@@ -135,6 +137,21 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
             title="Reset View"
           >
             <Home className="w-5 h-5" />
+          </Button>
+          
+          {/* Toggle Knowledge Metrics */}
+          <Button
+            variant={showKnowledgeMetrics ? "cosmic" : "stellar"}
+            size="sm"
+            onClick={() => setShowKnowledgeMetrics(!showKnowledgeMetrics)}
+            className="w-12 h-12 rounded-full p-0"
+            title={showKnowledgeMetrics ? "Hide Knowledge Metrics" : "Show Knowledge Metrics"}
+          >
+            {showKnowledgeMetrics ? (
+              <EyeOff className="w-5 h-5" />
+            ) : (
+              <BarChart3 className="w-5 h-5" />
+            )}
           </Button>
         </div>
       </div>

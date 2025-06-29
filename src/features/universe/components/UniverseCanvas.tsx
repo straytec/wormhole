@@ -23,6 +23,7 @@ export const UniverseCanvas: React.FC = () => {
     discover, 
     selectedBody, 
     setSelectedBody,
+    showKnowledgeMetrics,
     cameraPosition,
     setCameraPosition,
     targetPosition,
@@ -236,7 +237,9 @@ export const UniverseCanvas: React.FC = () => {
       />
 
       {/* Knowledge Metrics Panel */}
-      <KnowledgeMetrics celestialBodies={celestialBodies} />
+      {showKnowledgeMetrics && (
+        <KnowledgeMetrics celestialBodies={celestialBodies} />
+      )}
 
       {/* Premium Portal (subtle) */}
       <motion.div

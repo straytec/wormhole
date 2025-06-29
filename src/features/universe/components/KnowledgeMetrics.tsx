@@ -58,9 +58,15 @@ export const KnowledgeMetrics: React.FC<KnowledgeMetricsProps> = ({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
       className="fixed top-8 left-8 z-30"
     >
-      <div className="bg-cosmic-900/95 backdrop-blur-xl border border-cosmic-700 rounded-xl p-6 shadow-2xl min-w-80">
+      <motion.div
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.9 }}
+        className="bg-cosmic-900/95 backdrop-blur-xl border border-cosmic-700 rounded-xl p-6 shadow-2xl min-w-80"
+      >
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-stellar-500 to-cosmic-500 rounded-full flex items-center justify-center">
@@ -159,7 +165,7 @@ export const KnowledgeMetrics: React.FC<KnowledgeMetricsProps> = ({
             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
