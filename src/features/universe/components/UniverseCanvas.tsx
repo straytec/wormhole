@@ -106,7 +106,11 @@ export const UniverseCanvas: React.FC = () => {
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleBodyClick = (bodyId: string) => {
-    // Handle constellation interaction
+    // Set focused body when clicking any celestial body
+    const { setFocusedBody } = useUniverseStore.getState();
+    setFocusedBody(bodyId);
+    
+    // Also handle constellation interaction
     handleConstellationBodyClick(bodyId, celestialBodies);
   };
 

@@ -15,7 +15,7 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
   onClose,
 }) => {
   const { data: celestialBodies = [] } = useCelestialBodies();
-  const { focusOnBody, setSelectedBody } = useUniverseStore();
+  const { simpleFocusOnBody, setSelectedBody } = useUniverseStore();
   const body = celestialBodies.find(b => b.id === bodyId);
 
   if (!body) return null;
@@ -25,6 +25,10 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
     onClose();
   };
 
+  const handleFocus = () => {
+    handleClose(); // Close the popup immediately
+    simpleFocusOnBody(bodyId); // Make the body bright
+  };
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -87,12 +91,7 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
             <Button
               variant="cosmic"
               size="sm"
-              onClick={() => {
-                handleClose(); // Close the popup first
-                setTimeout(() => {
-                  focusOnBody(bodyId, celestialBodies);
-                }, 100); // Small delay to ensure popup closes first
-              }}
+              onClick={handleFocus}
               className="w-full"
             >
               <Focus className="w-4 h-4 mr-2" />

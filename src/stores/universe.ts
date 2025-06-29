@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface UniverseState {
   isAddingContent: boolean;
   selectedBody: string | null;
+  focusedBody: string | null; // Separate state for focused (bright) body
   showKnowledgeMetrics: boolean;
   cameraPosition: { x: number; y: number; z: number };
   targetPosition: { x: number; y: number; z: number };
@@ -11,13 +12,14 @@ interface UniverseState {
   searchQuery: string;
   setAddingContent: (adding: boolean) => void;
   setSelectedBody: (bodyId: string | null) => void;
+  setFocusedBody: (bodyId: string | null) => void;
   setShowKnowledgeMetrics: (show: boolean) => void;
   setCameraPosition: (position: { x: number; y: number; z: number }) => void;
   setTargetPosition: (target: { x: number; y: number; z: number }) => void;
   setIsAnimating: (animating: boolean) => void;
   setViewMode: (mode: 'overview' | 'focused' | 'zone') => void;
   setSearchQuery: (query: string) => void;
-  focusOnBody: (bodyId: string, celestialBodies: any[]) => void;
+  simpleFocusOnBody: (bodyId: string) => void;
   resetView: () => void;
   discover: () => void;
    closeDetailsModal: () => void;
@@ -26,6 +28,7 @@ interface UniverseState {
 export const useUniverseStore = create<UniverseState>((set, get) => ({
   isAddingContent: false,
   selectedBody: null,
+  focusedBody: null,
   showKnowledgeMetrics: true,
   cameraPosition: { x: 0, y: 0, z: 100 },
   targetPosition: { x: 0, y: 0, z: 100 },
@@ -34,28 +37,16 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
   searchQuery: '',
   setAddingContent: (adding) => set({ isAddingContent: adding }),
   setSelectedBody: (bodyId) => set({ selectedBody: bodyId }),
+  setFocusedBody: (bodyId) => set({ focusedBody: bodyId }),
   setShowKnowledgeMetrics: (show) => set({ showKnowledgeMetrics: show }),
   setCameraPosition: (position) => set({ cameraPosition: position }),
   setTargetPosition: (target) => set({ targetPosition: target }),
   setIsAnimating: (animating) => set({ isAnimating: animating }),
   setViewMode: (mode) => set({ viewMode: mode }),
   setSearchQuery: (query) => set({ searchQuery: query }),
-  focusOnBody: (bodyId, celestialBodies) => {
-    const body = celestialBodies.find(b => b.id === bodyId);
-    if (!body) return;
-    
-    const state = get();
-    set({
-      cameraPosition: state.targetPosition, // Sync current position
-      targetPosition: { 
-        x: body.position_x, 
-        y: body.position_y, 
-        z: state.targetPosition.z // Keep current zoom level
-      },
-      selectedBody: bodyId, // Set immediately for bright effect
-      viewMode: 'focused',
-      isAnimating: true
-    });
+  simpleFocusOnBody: (bodyId) => {
+    // Simply set the focused body for brightness effect
+    set({ focusedBody: bodyId });
   },
   resetView: () => {
     const state = get();
@@ -63,6 +54,7 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
       cameraPosition: state.targetPosition, // Sync current position
       targetPosition: { x: 0, y: 0, z: 100 },
       selectedBody: null,
+      focusedBody: null,
       viewMode: 'overview',
       isAnimating: true
     });

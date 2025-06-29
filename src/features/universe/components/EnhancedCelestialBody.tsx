@@ -19,7 +19,8 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
   scale,
 }) => {
   const { selectedBody } = useUniverseStore();
-  const isDiscovered = selectedBody === body.id && !isSelected && !isInConstellation;
+  const { focusedBody } = useUniverseStore();
+  const isFocused = focusedBody === body.id;
   
   const getContentTypeVisualization = () => {
     const baseSize = Math.max(body.visual_attributes.size * 30, 20);
@@ -335,16 +336,16 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
           transition-all duration-300 relative group
           ${isSelected ? 'ring-4 ring-stellar-400 ring-opacity-60 rounded-full' : ''}
           ${isInConstellation ? 'ring-2 ring-white/40 rounded-full' : ''}
-          ${isDiscovered ? 'ring-4 ring-yellow-300 ring-opacity-80 rounded-full' : ''}
+          ${isFocused ? 'ring-4 ring-yellow-300 ring-opacity-80 rounded-full' : ''}
         `}
         style={{
-          filter: `drop-shadow(${visualization.glow}) ${isDiscovered ? 'brightness(2.2) saturate(2) contrast(1.3)' : ''}`,
+          filter: `drop-shadow(${visualization.glow}) ${isFocused ? 'brightness(2.2) saturate(2) contrast(1.3)' : ''}`,
         }}
       >
         {visualization.component}
         
-        {/* Discovery Highlight Effect */}
-        {isDiscovered && (
+        {/* Focus Highlight Effect */}
+        {isFocused && (
           <>
             {/* Bright pulsing ring */}
             <motion.div
