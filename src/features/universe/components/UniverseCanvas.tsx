@@ -24,6 +24,7 @@ export const UniverseCanvas: React.FC = () => {
     discover, 
     selectedBody, 
     setSelectedBody,
+    closeDetailsModal,
     showKnowledgeMetrics,
     cameraPosition,
     setCameraPosition,
@@ -291,7 +292,7 @@ export const UniverseCanvas: React.FC = () => {
       {selectedBody && (
         <CelestialBodyDetails
           bodyId={selectedBody}
-          onClose={() => setSelectedBody(null)}
+          onClose={closeDetailsModal}
         />
       )}
 

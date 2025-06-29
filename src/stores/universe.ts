@@ -20,6 +20,7 @@ interface UniverseState {
   focusOnBody: (bodyId: string, celestialBodies: any[]) => void;
   resetView: () => void;
   discover: () => void;
+   closeDetailsModal: () => void;
 }
 
 export const useUniverseStore = create<UniverseState>((set, get) => ({
@@ -69,6 +70,9 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
   discover: () => {
     // This will be handled by the discovery hook
     console.log('Discovery triggered from store');
+  },
+  closeDetailsModal: () => {
+    set({ selectedBody: null });
   }
 }
 )
