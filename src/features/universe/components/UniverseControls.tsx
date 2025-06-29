@@ -178,35 +178,7 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
       )}
 
       {/* Universe Stats - Top Left */}
-      {celestialBodies.length > 0 && (
-        <div className="fixed top-8 left-8 z-30">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-cosmic-900/80 backdrop-blur-lg border border-cosmic-700 rounded-xl p-4 shadow-2xl"
-          >
-            <h3 className="text-white font-medium mb-2 text-sm">Your Universe</h3>
-            <div className="space-y-1 text-xs">
-              <div className="flex justify-between text-cosmic-200">
-                <span>Total Bodies:</span>
-                <span className="text-white">{celestialBodies.length}</span>
-              </div>
-              <div className="flex justify-between text-cosmic-200">
-                <span>Singularities:</span>
-                <span className="text-purple-300">
-                  {celestialBodies.filter(b => b.is_singularity).length}
-                </span>
-              </div>
-              <div className="flex justify-between text-cosmic-200">
-                <span>High Impact:</span>
-                <span className="text-stellar-300">
-                  {celestialBodies.filter(b => b.has_impact).length}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      {/* Removed - now handled by KnowledgeMetrics component */}
       
       {/* Discovery Modal */}
       <DiscoveryModal 

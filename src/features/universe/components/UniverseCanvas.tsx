@@ -6,7 +6,9 @@ import { useUniverseStore } from '../../../stores/universe';
 import { useCelestialBodies } from '../../../hooks/useCelestialBodies';
 import { CelestialBodyDetails } from './CelestialBodyDetails';
 import { UniverseControls } from './UniverseControls';
-import { CosmicPhenomena } from './CosmicPhenomena';
+import { EnhancedCosmicPhenomena } from './EnhancedCosmicPhenomena';
+import { EnhancedCelestialBody } from './EnhancedCelestialBody';
+import { KnowledgeMetrics } from './KnowledgeMetrics';
 import { useCameraAnimation } from '../../../hooks/useCameraAnimation';
 import { useDragging } from '../../../hooks/useDragging';
 import { ConstellationLines } from '../../constellation/components/ConstellationLines';
@@ -200,140 +202,27 @@ export const UniverseCanvas: React.FC = () => {
               transition: isAnimating ? 'transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
             }}
           >
-            {/* Cosmic Phenomena (background groupings) */}
-            <CosmicPhenomena celestialBodies={celestialBodies} />
+            {/* Enhanced Cosmic Phenomena (background groupings) */}
+            <EnhancedCosmicPhenomena celestialBodies={celestialBodies} />
             
             {/* Constellation Lines */}
             <ConstellationLines activeConstellationId={activeConstellationId} />
             
-            {/* Individual Celestial Bodies */}
-            {celestialBodies.map((body) => (
-              <motion.div
-                key={body.id}
-                className="absolute cursor-pointer"
-                style={{
-                  left: `${50 + (body.position_x * 0.5)}%`,
-                  top: `${50 + (body.position_y * 0.5)}%`,
-                  transform: 'translate(-50%, -50%)',
-                  pointerEvents: isDragging ? 'none' : 'auto',
-                }}
-                initial={{ 
-                  opacity: 0, 
-                  scale: 0,
-                  rotateZ: 0,
-                }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: 1,
-                  rotateZ: 360,
-                }}
-                transition={{ 
-                  duration: 1.5,
-                  delay: Math.random() * 0.5,
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                  rotateZ: {
-                    duration: 2,
-                    ease: "easeOut"
-                  }
-                }}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-              >
-                <div
-                  className={`
-                    rounded-full transition-all duration-300 relative group
-                    ${selectedBody === body.id ? 'ring-4 ring-stellar-400 ring-opacity-60' : ''}
-                    ${body.is_singularity
-                      ? 'bg-gradient-to-r from-purple-900 to-black border-2 border-purple-400' 
-                      : body.visual_attributes.type === 'star'
-                      ? 'bg-gradient-to-r from-yellow-400 to-orange-500'
-                      : body.visual_attributes.type === 'planet'
-                      ? 'bg-gradient-to-r from-blue-500 to-green-500'
-                      : body.visual_attributes.type === 'nebula'
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-500'
-                      : 'bg-gradient-to-r from-gray-400 to-gray-600'
-                    }
-                  `}
-                  style={{
-                    width: `${Math.max(body.visual_attributes.size * 30, 20)}px`,
-                    height: `${Math.max(body.visual_attributes.size * 30, 20)}px`,
-                    opacity: body.visual_attributes.brightness,
-                    boxShadow: `0 0 ${body.visual_attributes.size * 15}px rgba(255, 255, 255, ${body.visual_attributes.brightness * 0.5})`,
-                  }}
+            {/* Enhanced Individual Celestial Bodies */}
+            {celestialBodies.map((body) => {
+              const isInConstellation = activeConstellationId && 
+                selectedConstellation?.celestialBodies.includes(body.id);
+              
+              return (
+                <EnhancedCelestialBody
+                  key={body.id}
+                  body={body}
+                  isSelected={selectedBody === body.id}
+                  isInConstellation={!!isInConstellation}
                   onClick={() => handleBodyClick(body.id)}
-                  title={`${body.title} (${body.content_type})`}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                >
-                  {/* Birth Animation Ring */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full border-2 border-white"
-                    initial={{ scale: 0, opacity: 1 }}
-                    animate={{ scale: 3, opacity: 0 }}
-                    transition={{ 
-                      duration: 2,
-                      delay: 0.5,
-                      ease: "easeOut"
-                    }}
-                  />
-                  
-                  {/* Sparkle Effects */}
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 bg-white rounded-full"
-                      style={{
-                        left: '50%',
-                        top: '50%',
-                      }}
-                      initial={{ 
-                        scale: 0,
-                        x: 0,
-                        y: 0,
-                        opacity: 1
-                      }}
-                      animate={{ 
-                        scale: [0, 1, 0],
-                        x: Math.cos(i * 45 * Math.PI / 180) * 40,
-                        y: Math.sin(i * 45 * Math.PI / 180) * 40,
-                        opacity: [1, 1, 0]
-                      }}
-                      transition={{ 
-                        duration: 1.5,
-                        delay: 0.8 + (i * 0.1),
-                        ease: "easeOut"
-                      }}
-                    />
-                  ))}
-                  
-                  {body.has_impact && (
-                    <div className="absolute inset-0 rounded-full animate-pulse bg-white opacity-20" />
-                  )}
-                  
-                  {/* Selection indicator */}
-                  {selectedBody === body.id && (
-                    <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-stellar-400"
-                      animate={{
-                        scale: [1, 1.3, 1],
-                        opacity: [0.8, 0.3, 0.8],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                      }}
-                    />
-                  )}
-                  
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-cosmic-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                    {body.title}
-                  </div>
-                </div>
-              </motion.div>
+                  scale={1}
+                />
+              );
             ))}
           </div>
         )}
@@ -345,6 +234,9 @@ export const UniverseCanvas: React.FC = () => {
         onZoomToContent={handleZoomToContent}
         onOpenAtlas={handleOpenAtlas}
       />
+
+      {/* Knowledge Metrics Panel */}
+      <KnowledgeMetrics celestialBodies={celestialBodies} />
 
       {/* Premium Portal (subtle) */}
       <motion.div
