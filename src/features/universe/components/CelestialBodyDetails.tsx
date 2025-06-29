@@ -87,7 +87,12 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
             <Button
               variant="cosmic"
               size="sm"
-              onClick={() => focusOnBody(bodyId, celestialBodies)}
+              onClick={() => {
+                handleClose(); // Close the popup first
+                setTimeout(() => {
+                  focusOnBody(bodyId, celestialBodies);
+                }, 100); // Small delay to ensure popup closes first
+              }}
               className="w-full"
             >
               <Focus className="w-4 h-4 mr-2" />
