@@ -223,7 +223,7 @@ export const UniverseCanvas: React.FC = () => {
                   scale={1}
                 />
               );
-            ))}
+            })}
           </div>
         )}
       </div>
