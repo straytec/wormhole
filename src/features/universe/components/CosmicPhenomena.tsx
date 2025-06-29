@@ -127,13 +127,13 @@ export const CosmicPhenomena: React.FC<CosmicPhenomenaProps> = ({
         >
           {/* Cosmic trail effect for high-impact bodies */}
           <motion.div
-            className="absolute w-32 h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            className="absolute w-40 h-2 bg-gradient-to-r from-transparent via-white/40 to-transparent"
             style={{
               transform: `rotate(${Math.atan2(body.position_y, body.position_x) * 180 / Math.PI}deg)`,
             }}
             animate={{
-              opacity: [0.2, 0.5, 0.2],
-              scaleX: [0.8, 1.2, 0.8],
+              opacity: [0.3, 0.8, 0.3],
+              scaleX: [0.9, 1.4, 0.9],
             }}
             transition={{
               duration: 3,
@@ -157,10 +157,10 @@ export const CosmicPhenomena: React.FC<CosmicPhenomenaProps> = ({
         >
           {/* Gravitational lensing effect */}
           <motion.div
-            className="absolute w-24 h-24 border border-purple-400/30 rounded-full"
+            className="absolute w-32 h-32 border-2 border-purple-400/50 rounded-full"
             animate={{
               scale: [1, 1.5, 1],
-              opacity: [0.3, 0.1, 0.3],
+              opacity: [0.5, 0.2, 0.5],
             }}
             transition={{
               duration: 4,
@@ -168,10 +168,10 @@ export const CosmicPhenomena: React.FC<CosmicPhenomenaProps> = ({
             }}
           />
           <motion.div
-            className="absolute w-16 h-16 border border-purple-400/50 rounded-full"
+            className="absolute w-20 h-20 border-2 border-purple-400/70 rounded-full"
             animate={{
               scale: [1, 1.3, 1],
-              opacity: [0.5, 0.2, 0.5],
+              opacity: [0.7, 0.3, 0.7],
             }}
             transition={{
               duration: 3,
@@ -182,17 +182,30 @@ export const CosmicPhenomena: React.FC<CosmicPhenomenaProps> = ({
           
           {/* New Singularity Birth Effect */}
           <motion.div
-            className="absolute w-32 h-32 border-2 border-purple-300 rounded-full"
+            className="absolute w-40 h-40 border-3 border-purple-200 rounded-full"
             initial={{ scale: 0, opacity: 1, rotate: 0 }}
             animate={{ 
               scale: [0, 2, 0], 
-              opacity: [1, 0.3, 0],
+              opacity: [1, 0.5, 0],
               rotate: 360
             }}
             transition={{
               duration: 3,
               delay: 1,
               ease: "easeOut"
+            }}
+          />
+          
+          {/* Additional bright core effect */}
+          <motion.div
+            className="absolute w-8 h-8 bg-purple-300 rounded-full blur-sm"
+            animate={{
+              scale: [0.8, 1.2, 0.8],
+              opacity: [0.6, 1, 0.6],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
             }}
           />
         </motion.div>

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useCelestialBodies } from '../../../hooks/useCelestialBodies';
 import { Constellation } from '../types';
 
-const MINIMUM_WORKS_FOR_CONSTELLATION = 5;
+const MINIMUM_WORKS_FOR_CONSTELLATION = 3;
 
 export const useConstellations = () => {
   const { data: celestialBodies = [] } = useCelestialBodies();

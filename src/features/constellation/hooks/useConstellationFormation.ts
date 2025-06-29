@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCelestialBodies } from '../../../hooks/useCelestialBodies';
 import { useConstellations } from './useConstellations';
 
-const CONSTELLATION_THRESHOLD = 5;
+const CONSTELLATION_THRESHOLD = 3;
 
 interface ConstellationFormationEvent {
   constellationId: string;
