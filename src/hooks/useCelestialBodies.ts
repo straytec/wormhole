@@ -177,7 +177,7 @@ export const useCreateCelestialBody = () => {
         title: data.title,
         content_type: data.content_type,
         genre: data.genre || null,
-        creator_id: data.creator || null,
+        creator_id: data.creator || 'Unknown Creator',
         external_id: data.external_id || null,
         api_data: data.api_data || null,
         position_x: position.x,

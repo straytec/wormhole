@@ -1,44 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCelestialBodies } from '../../../hooks/useCelestialBodies';
+import { useConstellationFormation } from '../hooks/useConstellationFormation';
 import { useConstellations } from '../hooks/useConstellations';
 
-interface ConstellationBirthEffectProps {
-  newBodyId?: string;
-}
-
-export const ConstellationBirthEffect: React.FC<ConstellationBirthEffectProps> = ({
-  newBodyId,
-}) => {
+export const ConstellationBirthEffect: React.FC = () => {
   const { data: celestialBodies = [] } = useCelestialBodies();
-  const { getConstellationForBody, getConstellationLines } = useConstellations();
-  const [birthingConstellation, setBirthingConstellation] = useState<string | null>(null);
-  const [showNotification, setShowNotification] = useState(false);
+  const { getConstellationLines, constellations } = useConstellations();
+  const { formationEvent } = useConstellationFormation();
 
-  useEffect(() => {
-    if (!newBodyId) return;
+  if (!formationEvent) return null;
 
-    // Check if the new body completes a constellation
-    const constellation = getConstellationForBody(newBodyId);
-    if (constellation && constellation.celestialBodies.length >= 3) {
-      // Check if this is a newly formed constellation (the new body is the completing piece)
-      const bodyIndex = constellation.celestialBodies.indexOf(newBodyId);
-      if (bodyIndex !== -1) {
-        setBirthingConstellation(constellation.id);
-        setShowNotification(true);
-        
-        // Clear the effect after animation completes
-        setTimeout(() => {
-          setBirthingConstellation(null);
-          setShowNotification(false);
-        }, 5000);
-      }
-    }
-  }, [newBodyId, getConstellationForBody]);
-
-  if (!birthingConstellation) return null;
-
-  const constellation = getConstellationForBody(newBodyId!);
+  const constellation = constellations.find(c => c.id === formationEvent.constellationId);
   if (!constellation) return null;
 
   const lines = getConstellationLines(constellation.id);
@@ -121,7 +94,7 @@ export const ConstellationBirthEffect: React.FC<ConstellationBirthEffectProps> =
 
       {/* Poetic Notification */}
       <AnimatePresence>
-        {showNotification && (
+        {formationEvent && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -144,6 +117,9 @@ export const ConstellationBirthEffect: React.FC<ConstellationBirthEffectProps> =
                 </p>
                 <p className="text-cosmic-300 text-xs mt-1">
                   {constellation.name}
+                </p>
+                <p className="text-cosmic-400 text-xs mt-2">
+                  {constellation.celestialBodies.length} works by {formationEvent.creator}
                 </p>
               </div>
             </div>

@@ -32,7 +32,7 @@ const searchMovies = async (title: string): Promise<ContentCandidate[]> => {
         ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
         : 'https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg?auto=compress&cs=tinysrgb&w=300',
       year: movie.release_date?.split('-')[0],
-      creator: 'Director info not available',
+      creator: movie.director || 'Unknown Director',
       description: movie.overview
     })) || [];
   } catch (error) {
@@ -54,33 +54,42 @@ const getMockMovies = (title: string): ContentCandidate[] => {
     },
     {
       id: 'movie-2',
-      title: 'The Matrix',
-      type: 'movie' as const,
-      imageUrl: 'https://images.pexels.com/photos/3095769/pexels-photo-3095769.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1999',
-      creator: 'The Wachowskis',
-      description: 'A computer hacker learns about the true nature of reality...'
-    },
-    {
-      id: 'movie-3',
-      title: 'Blade Runner 2049',
-      type: 'movie' as const,
-      imageUrl: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '2017',
-      creator: 'Denis Villeneuve',
-      description: 'A young blade runner discovers a secret...'
-    },
-    {
-      id: 'movie-4',
       title: 'Inception',
       type: 'movie' as const,
-      imageUrl: 'https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg?auto=compress&cs=tinysrgb&w=300',
+      imageUrl: 'https://images.pexels.com/photos/3095769/pexels-photo-3095769.jpeg?auto=compress&cs=tinysrgb&w=300',
       year: '2010',
       creator: 'Christopher Nolan',
       description: 'A thief who steals corporate secrets through dream-sharing technology...'
     },
     {
+      id: 'movie-3',
+      title: 'The Dark Knight',
+      type: 'movie' as const,
+      imageUrl: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '2008',
+      creator: 'Christopher Nolan',
+      description: 'Batman faces the Joker in this dark superhero epic...'
+    },
+    {
+      id: 'movie-4',
+      title: 'Tenet',
+      type: 'movie' as const,
+      imageUrl: 'https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '2020',
+      creator: 'Christopher Nolan',
+      description: 'A secret agent embarks on a dangerous mission involving time inversion...'
+    },
+    {
       id: 'movie-5',
+      title: 'Oppenheimer',
+      type: 'movie' as const,
+      imageUrl: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '2023',
+      creator: 'Christopher Nolan',
+      description: 'The story of J. Robert Oppenheimer and the development of the atomic bomb...'
+    },
+    {
+      id: 'movie-6',
       title: 'Dune',
       type: 'movie' as const,
       imageUrl: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=300',
@@ -89,7 +98,7 @@ const getMockMovies = (title: string): ContentCandidate[] => {
       description: 'A noble family becomes embroiled in a war for control over the galaxy\'s most valuable asset...'
     },
     {
-      id: 'movie-6',
+      id: 'movie-7',
       title: 'Arrival',
       type: 'movie' as const,
       imageUrl: 'https://images.pexels.com/photos/3095769/pexels-photo-3095769.jpeg?auto=compress&cs=tinysrgb&w=300',
@@ -98,22 +107,13 @@ const getMockMovies = (title: string): ContentCandidate[] => {
       description: 'A linguist works with the military to communicate with alien lifeforms...'
     },
     {
-      id: 'movie-7',
-      title: 'Ex Machina',
-      type: 'movie' as const,
-      imageUrl: 'https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '2014',
-      creator: 'Alex Garland',
-      description: 'A young programmer is selected to participate in a ground-breaking experiment in synthetic intelligence...'
-    },
-    {
       id: 'movie-8',
-      title: 'Her',
+      title: 'Blade Runner 2049',
       type: 'movie' as const,
       imageUrl: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '2013',
-      creator: 'Spike Jonze',
-      description: 'A sensitive writer develops an unlikely relationship with an operating system...'
+      year: '2017',
+      creator: 'Denis Villeneuve',
+      description: 'A young blade runner discovers a secret that could plunge society into chaos...'
     }
   ];
 
@@ -163,57 +163,57 @@ const getMockBooks = (title: string): ContentCandidate[] => {
     },
     {
       id: 'book-2',
-      title: 'The Hitchhiker\'s Guide to the Galaxy',
+      title: 'Dune Messiah',
       type: 'book' as const,
-      imageUrl: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1979',
-      creator: 'Douglas Adams',
-      description: 'A comedic science fiction series...'
+      imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1969',
+      creator: 'Frank Herbert',
+      description: 'The sequel to Dune, continuing Paul Atreides\' story...'
     },
     {
       id: 'book-3',
-      title: 'Neuromancer',
+      title: 'Children of Dune',
       type: 'book' as const,
       imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1984',
-      creator: 'William Gibson',
-      description: 'A groundbreaking cyberpunk novel about a washed-up computer hacker...'
+      year: '1976',
+      creator: 'Frank Herbert',
+      description: 'The third book in the Dune series...'
     },
     {
       id: 'book-4',
+      title: 'God Emperor of Dune',
+      type: 'book' as const,
+      imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1981',
+      creator: 'Frank Herbert',
+      description: 'The fourth book in the Dune series...'
+    },
+    {
+      id: 'book-5',
+      title: 'Heretics of Dune',
+      type: 'book' as const,
+      imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1984',
+      creator: 'Frank Herbert',
+      description: 'The fifth book in the Dune series...'
+    },
+    {
+      id: 'book-6',
+      title: 'Chapterhouse: Dune',
+      type: 'book' as const,
+      imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1985',
+      creator: 'Frank Herbert',
+      description: 'The sixth and final book in the original Dune series...'
+    },
+    {
+      id: 'book-7',
       title: 'Foundation',
       type: 'book' as const,
       imageUrl: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=300',
       year: '1951',
       creator: 'Isaac Asimov',
-      description: 'The first novel in Asimov\'s Foundation series about the fall and rise of a galactic empire...'
-    },
-    {
-      id: 'book-5',
-      title: 'The Left Hand of Darkness',
-      type: 'book' as const,
-      imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1969',
-      creator: 'Ursula K. Le Guin',
-      description: 'A science fiction novel exploring themes of gender and society...'
-    },
-    {
-      id: 'book-6',
-      title: 'Ender\'s Game',
-      type: 'book' as const,
-      imageUrl: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1985',
-      creator: 'Orson Scott Card',
-      description: 'A young boy is recruited to fight in an interstellar war...'
-    },
-    {
-      id: 'book-7',
-      title: 'The Martian',
-      type: 'book' as const,
-      imageUrl: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '2011',
-      creator: 'Andy Weir',
-      description: 'An astronaut becomes stranded on Mars and must find a way to survive...'
+      description: 'The first novel in Asimov\'s Foundation series...'
     }
   ];
 
@@ -226,15 +226,51 @@ const searchAlbums = async (title: string): Promise<ContentCandidate[]> => {
   const mockAlbums = [
     {
       id: 'album-1',
-      title: 'Interstellar Soundtrack',
+      title: 'Abbey Road',
       type: 'album' as const,
       imageUrl: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '2014',
-      creator: 'Hans Zimmer',
-      description: 'Original motion picture soundtrack...'
+      year: '1969',
+      creator: 'The Beatles',
+      description: 'The Beatles\' penultimate studio album featuring the famous medley...'
     },
     {
       id: 'album-2',
+      title: 'Sgt. Pepper\'s Lonely Hearts Club Band',
+      type: 'album' as const,
+      imageUrl: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1967',
+      creator: 'The Beatles',
+      description: 'Groundbreaking concept album that changed popular music...'
+    },
+    {
+      id: 'album-3',
+      title: 'Revolver',
+      type: 'album' as const,
+      imageUrl: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1966',
+      creator: 'The Beatles',
+      description: 'Innovative album showcasing The Beatles\' studio experimentation...'
+    },
+    {
+      id: 'album-4',
+      title: 'Rubber Soul',
+      type: 'album' as const,
+      imageUrl: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1965',
+      creator: 'The Beatles',
+      description: 'Transitional album marking The Beatles\' artistic maturation...'
+    },
+    {
+      id: 'album-5',
+      title: 'The White Album',
+      type: 'album' as const,
+      imageUrl: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=300',
+      year: '1968',
+      creator: 'The Beatles',
+      description: 'Double album showcasing the band\'s diverse musical styles...'
+    },
+    {
+      id: 'album-6',
       title: 'The Dark Side of the Moon',
       type: 'album' as const,
       imageUrl: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg?auto=compress&cs=tinysrgb&w=300',
@@ -243,49 +279,13 @@ const searchAlbums = async (title: string): Promise<ContentCandidate[]> => {
       description: 'Progressive rock masterpiece...'
     },
     {
-      id: 'album-3',
+      id: 'album-7',
       title: 'OK Computer',
       type: 'album' as const,
       imageUrl: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=300',
       year: '1997',
       creator: 'Radiohead',
       description: 'Alternative rock album exploring themes of modern alienation...'
-    },
-    {
-      id: 'album-4',
-      title: 'Kind of Blue',
-      type: 'album' as const,
-      imageUrl: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1959',
-      creator: 'Miles Davis',
-      description: 'Landmark jazz album that influenced generations of musicians...'
-    },
-    {
-      id: 'album-5',
-      title: 'Thriller',
-      type: 'album' as const,
-      imageUrl: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1982',
-      creator: 'Michael Jackson',
-      description: 'Best-selling album of all time with iconic pop hits...'
-    },
-    {
-      id: 'album-6',
-      title: 'Abbey Road',
-      type: 'album' as const,
-      imageUrl: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '1969',
-      creator: 'The Beatles',
-      description: 'The Beatles\' penultimate studio album featuring the famous medley...'
-    },
-    {
-      id: 'album-7',
-      title: 'Random Access Memories',
-      type: 'album' as const,
-      imageUrl: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=300',
-      year: '2013',
-      creator: 'Daft Punk',
-      description: 'Electronic music masterpiece blending disco, funk, and house...'
     }
   ];
 

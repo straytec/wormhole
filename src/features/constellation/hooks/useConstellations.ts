@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useCelestialBodies } from '../../../hooks/useCelestialBodies';
 import { Constellation } from '../types';
 
-const MINIMUM_WORKS_FOR_CONSTELLATION = 3;
+const MINIMUM_WORKS_FOR_CONSTELLATION = 5;
 
 export const useConstellations = () => {
   const { data: celestialBodies = [] } = useCelestialBodies();
@@ -23,6 +23,11 @@ export const useConstellations = () => {
     
     Object.entries(creatorGroups).forEach(([creator, bodies]) => {
       if (bodies.length >= MINIMUM_WORKS_FOR_CONSTELLATION && creator !== 'Unknown Creator') {
+        // Sort bodies by creation date to get the formation date
+        const sortedBodies = [...bodies].sort((a, b) => 
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        
         // Calculate center position
         const centerX = bodies.reduce((sum, body) => sum + body.position_x, 0) / bodies.length;
         const centerY = bodies.reduce((sum, body) => sum + body.position_y, 0) / bodies.length;
@@ -37,7 +42,7 @@ export const useConstellations = () => {
           name: constellationName,
           celestialBodies: bodies.map(b => b.id),
           isDiscovered: true, // All constellations are discovered when they meet the criteria
-          discoveredAt: bodies[bodies.length - 1].created_at, // Use the latest addition
+          discoveredAt: sortedBodies[MINIMUM_WORKS_FOR_CONSTELLATION - 1]?.created_at, // Formation date (5th work)
           centerPosition: {
             x: centerX,
             y: centerY,
