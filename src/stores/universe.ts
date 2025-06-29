@@ -43,27 +43,23 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
     const body = celestialBodies.find(b => b.id === bodyId);
     if (!body) return;
     
-    // Close any existing details modal
-    set({ selectedBody: null });
-    
     const state = get();
     set({
+      cameraPosition: state.targetPosition, // Sync current position
       targetPosition: { 
         x: body.position_x, 
         y: body.position_y, 
         z: state.targetPosition.z // Keep current zoom level
       },
+      selectedBody: bodyId, // Set immediately for bright effect
       viewMode: 'focused',
       isAnimating: true
     });
-    
-    // Select for bright effect after animation starts
-    setTimeout(() => {
-      set({ selectedBody: bodyId });
-    }, 100);
   },
   resetView: () => {
+    const state = get();
     set({
+      cameraPosition: state.targetPosition, // Sync current position
       targetPosition: { x: 0, y: 0, z: 100 },
       selectedBody: null,
       viewMode: 'overview',

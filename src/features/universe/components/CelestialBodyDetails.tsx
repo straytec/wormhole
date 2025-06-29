@@ -15,10 +15,15 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
   onClose,
 }) => {
   const { data: celestialBodies = [] } = useCelestialBodies();
-  const { focusOnBody } = useUniverseStore();
+  const { focusOnBody, setSelectedBody } = useUniverseStore();
   const body = celestialBodies.find(b => b.id === bodyId);
 
   if (!body) return null;
+
+  const handleClose = () => {
+    setSelectedBody(null); // Clear selection when closing
+    onClose();
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -48,7 +53,7 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-void-950 bg-opacity-90 backdrop-blur-sm z-40"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Modal */}
@@ -69,7 +74,7 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
               </div>
             </div>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="text-cosmic-400 hover:text-white transition-colors"
             >
               <X className="w-6 h-6" />

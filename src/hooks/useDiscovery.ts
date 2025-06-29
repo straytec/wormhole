@@ -3,82 +3,90 @@ import { useUniverseStore } from '../stores/universe';
 
 export const useDiscovery = () => {
   const { data: celestialBodies = [] } = useCelestialBodies();
-  const { 
-    setCameraPosition, 
-    setTargetPosition, 
-    setSelectedBody, 
-    setIsAnimating, 
-    setViewMode,
-    cameraPosition,
-    targetPosition
-  } = useUniverseStore();
-
-  const animateToBody = (body: any) => {
-    // Close any existing details modal
-    setSelectedBody(null);
-    
-    // Center on the body without changing zoom level
-    setTargetPosition({
-      x: body.position_x,
-      y: body.position_y,
-      z: targetPosition.z, // Keep current zoom level
-    });
-    
-    // Start animation and set view mode
-    setIsAnimating(true);
-    setViewMode('focused');
-    
-    // Select the body after animation starts to show bright effect
-    setTimeout(() => {
-      setSelectedBody(body.id);
-    }, 100);
-
-    return body;
-  };
+  const { focusOnBody, setSelectedBody } = useUniverseStore();
 
   const discoverRandom = () => {
     if (celestialBodies.length === 0) return;
 
+    // Close any existing details modal first
+    setSelectedBody(null);
+    
+    // Pick a random celestial body
     const randomIndex = Math.floor(Math.random() * celestialBodies.length);
     const randomBody = celestialBodies[randomIndex];
 
-    return animateToBody(randomBody);
+    // Use the focusOnBody function which handles everything
+    setTimeout(() => {
+      focusOnBody(randomBody.id, celestialBodies);
+    }, 100);
+
+    return randomBody;
   };
 
   const discoverByType = (contentType: string) => {
     const bodiesOfType = celestialBodies.filter(body => body.content_type === contentType);
     if (bodiesOfType.length === 0) return;
 
+    // Close any existing details modal first
+    setSelectedBody(null);
+
     const randomBody = bodiesOfType[Math.floor(Math.random() * bodiesOfType.length)];
-    return animateToBody(randomBody);
+    
+    setTimeout(() => {
+      focusOnBody(randomBody.id, celestialBodies);
+    }, 100);
+
+    return randomBody;
   };
 
   const discoverHighImpact = () => {
     const highImpactBodies = celestialBodies.filter(body => body.has_impact || body.is_singularity);
     if (highImpactBodies.length === 0) return discoverRandom();
 
+    // Close any existing details modal first
+    setSelectedBody(null);
+
     const randomBody = highImpactBodies[Math.floor(Math.random() * highImpactBodies.length)];
-    return animateToBody(randomBody);
+    
+    setTimeout(() => {
+      focusOnBody(randomBody.id, celestialBodies);
+    }, 100);
+
+    return randomBody;
   };
 
   const discoverOldest = () => {
     if (celestialBodies.length === 0) return;
 
+    // Close any existing details modal first
+    setSelectedBody(null);
+
     const oldestBody = [...celestialBodies].sort((a, b) => 
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     )[0];
 
-    return animateToBody(oldestBody);
+    setTimeout(() => {
+      focusOnBody(oldestBody.id, celestialBodies);
+    }, 100);
+
+    return oldestBody;
   };
 
   const discoverNewest = () => {
     if (celestialBodies.length === 0) return;
 
+    // Close any existing details modal first
+    setSelectedBody(null);
+
     const newestBody = [...celestialBodies].sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )[0];
 
-    return animateToBody(newestBody);
+    setTimeout(() => {
+      focusOnBody(newestBody.id, celestialBodies);
+    }, 100);
+
+    return newestBody;
   };
 
   return {

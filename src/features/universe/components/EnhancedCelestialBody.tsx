@@ -19,7 +19,7 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
   scale,
 }) => {
   const { selectedBody } = useUniverseStore();
-  const isDiscovered = selectedBody === body.id;
+  const isDiscovered = selectedBody === body.id && !isSelected && !isInConstellation;
   
   const getContentTypeVisualization = () => {
     const baseSize = Math.max(body.visual_attributes.size * 30, 20);
@@ -348,7 +348,13 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
           <>
             {/* Bright pulsing ring */}
             <motion.div
-              className="absolute inset-0 border-4 border-yellow-200 rounded-full"
+              className="absolute border-4 border-yellow-200 rounded-full"
+              style={{
+                width: `${baseSize * 2}px`,
+                height: `${baseSize * 2}px`,
+                left: `-${baseSize * 0.5}px`,
+                top: `-${baseSize * 0.5}px`,
+              }}
               animate={{
                 scale: [1, 2.2, 1],
                 opacity: [1, 0.3, 1],
@@ -362,7 +368,13 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
             
             {/* Secondary pulsing ring */}
             <motion.div
-              className="absolute inset-0 border-2 border-yellow-100 rounded-full"
+              className="absolute border-2 border-yellow-100 rounded-full"
+              style={{
+                width: `${baseSize * 1.6}px`,
+                height: `${baseSize * 1.6}px`,
+                left: `-${baseSize * 0.3}px`,
+                top: `-${baseSize * 0.3}px`,
+              }}
               animate={{
                 scale: [1, 1.6, 1],
                 opacity: [0.6, 0.1, 0.6],
@@ -377,7 +389,13 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
             
             {/* Bright glow effect */}
             <motion.div
-              className="absolute inset-0 bg-yellow-100/30 rounded-full blur-sm"
+              className="absolute bg-yellow-100/30 rounded-full blur-sm"
+              style={{
+                width: `${baseSize * 1.8}px`,
+                height: `${baseSize * 1.8}px`,
+                left: `-${baseSize * 0.4}px`,
+                top: `-${baseSize * 0.4}px`,
+              }}
               animate={{
                 scale: [1, 1.4, 1],
                 opacity: [0.5, 0.8, 0.5],
@@ -399,8 +417,8 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
                   top: '50%',
                 }}
                 animate={{
-                  x: Math.cos(i * 30 * Math.PI / 180) * 50,
-                  y: Math.sin(i * 30 * Math.PI / 180) * 50,
+                  x: Math.cos(i * 30 * Math.PI / 180) * (baseSize + 20),
+                  y: Math.sin(i * 30 * Math.PI / 180) * (baseSize + 20),
                   opacity: [0, 1, 0],
                   scale: [0, 2, 0],
                 }}
