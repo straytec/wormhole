@@ -185,15 +185,25 @@ export const UniverseCanvas: React.FC = () => {
               Add your first piece of knowledge to begin your cosmic journey
             </p>
             
-            <Button
-              variant="cosmic"
-              size="lg"
-              onClick={() => setAddingContent(true)}
-              className="shadow-2xl"
+            {/* Navigation message pointing to the working add button */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-col items-center gap-4"
             >
-              <Plus className="w-6 h-6 mr-2" />
-              Add to Universe
-            </Button>
+              <div className="flex items-center gap-3 text-stellar-300">
+                <span className="text-lg">👉</span>
+                <span className="text-base">Look for the blue</span>
+                <div className="w-8 h-8 bg-gradient-to-r from-cosmic-600 to-cosmic-500 rounded-full flex items-center justify-center">
+                  <Plus className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-base">button in the bottom-right corner</span>
+              </div>
+              <p className="text-cosmic-400 text-sm max-w-md">
+                Click the cosmic blue button to add your first piece of knowledge and watch your universe come to life
+              </p>
+            </motion.div>
           </motion.div>
         ) : (
           // Render celestial bodies
