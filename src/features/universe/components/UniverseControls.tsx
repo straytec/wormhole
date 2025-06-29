@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff, LogOut } from 'lucide-react';
+import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff, LogOut, Share2 } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useUniverseStore } from '../../../stores/universe';
 import { useAuthStore } from '../../../stores/auth';
 import { CelestialBody } from '../../../hooks/useCelestialBodies';
 import { DiscoveryModal } from './DiscoveryModal';
+import { ShareGalaxyModal } from './ShareGalaxyModal';
 
 interface UniverseControlsProps {
   celestialBodies: CelestialBody[];
@@ -32,6 +33,7 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
   const { signOut } = useAuthStore();
   
   const [showDiscovery, setShowDiscovery] = React.useState(false);
+  const [showShareModal, setShowShareModal] = React.useState(false);
 
   const contentTypeCounts = celestialBodies.reduce((acc, body) => {
     acc[body.content_type] = (acc[body.content_type] || 0) + 1;
@@ -75,6 +77,24 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
             <Telescope className="w-8 h-8" />
           </Button>
         </motion.div>
+
+        {/* Share Galaxy Button */}
+        {celestialBodies.length > 0 && (
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button
+              variant="stellar"
+              size="lg"
+              onClick={() => setShowShareModal(true)}
+              className="w-16 h-16 rounded-full p-0 shadow-2xl border-2 border-stellar-300"
+              title="Share your galaxy"
+            >
+              <Share2 className="w-8 h-8" />
+            </Button>
+          </motion.div>
+        )}
 
         {/* Discover Button */}
         <motion.div
@@ -214,6 +234,12 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
       <DiscoveryModal 
         isOpen={showDiscovery}
         onClose={() => setShowDiscovery(false)}
+      />
+      
+      {/* Share Galaxy Modal */}
+      <ShareGalaxyModal 
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
       />
     </>
   );
