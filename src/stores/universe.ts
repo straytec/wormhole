@@ -70,3 +70,6 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
     // This will be handled by the discovery hook
     console.log('Discovery triggered from store');
   }
+}
+)
+)
