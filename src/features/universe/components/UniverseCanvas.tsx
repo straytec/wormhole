@@ -105,8 +105,16 @@ export const UniverseCanvas: React.FC = () => {
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleBodyClick = (bodyId: string) => {
-    // Handle both regular focus and constellation interaction
+    // Close any existing details modal first
+    setSelectedBody(null);
+    
+    // Handle constellation interaction
     handleConstellationBodyClick(bodyId, celestialBodies);
+    
+    // Then focus on the body for bright effect
+    setTimeout(() => {
+      setSelectedBody(bodyId);
+    }, 100);
   };
 
   const handleZoomToContent = (contentType: string) => {

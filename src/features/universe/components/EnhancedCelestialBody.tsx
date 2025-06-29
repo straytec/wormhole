@@ -338,7 +338,7 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
           ${isDiscovered ? 'ring-4 ring-yellow-300 ring-opacity-80 rounded-full' : ''}
         `}
         style={{
-          filter: `drop-shadow(${visualization.glow}) ${isDiscovered ? 'brightness(1.8) saturate(1.5)' : ''}`,
+          filter: `drop-shadow(${visualization.glow}) ${isDiscovered ? 'brightness(2.2) saturate(2) contrast(1.3)' : ''}`,
         }}
       >
         {visualization.component}
@@ -346,12 +346,41 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
         {/* Discovery Highlight Effect */}
         {isDiscovered && (
           <>
-            {/* Pulsing bright ring */}
+            {/* Bright pulsing ring */}
             <motion.div
-              className="absolute inset-0 border-4 border-yellow-300 rounded-full"
+              className="absolute inset-0 border-4 border-yellow-200 rounded-full"
               animate={{
-                scale: [1, 1.8, 1],
-                opacity: [0.8, 0.2, 0.8],
+                scale: [1, 2.2, 1],
+                opacity: [1, 0.3, 1],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            
+            {/* Secondary pulsing ring */}
+            <motion.div
+              className="absolute inset-0 border-2 border-yellow-100 rounded-full"
+              animate={{
+                scale: [1, 1.6, 1],
+                opacity: [0.6, 0.1, 0.6],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: 0.3,
+                ease: "easeInOut",
+              }}
+            />
+            
+            {/* Bright glow effect */}
+            <motion.div
+              className="absolute inset-0 bg-yellow-100/30 rounded-full blur-sm"
+              animate={{
+                scale: [1, 1.4, 1],
+                opacity: [0.5, 0.8, 0.5],
               }}
               transition={{
                 duration: 2,
@@ -360,40 +389,25 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
               }}
             />
             
-            {/* Bright flash effect */}
-            <motion.div
-              className="absolute inset-0 bg-yellow-200/40 rounded-full"
-              initial={{ scale: 0, opacity: 1 }}
-              animate={{ 
-                scale: [0, 3, 0],
-                opacity: [1, 0.3, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatDelay: 1,
-              }}
-            />
-            
-            {/* Sparkle particles */}
-            {Array.from({ length: 8 }).map((_, i) => (
+            {/* Sparkle particles around the body */}
+            {Array.from({ length: 12 }).map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-2 h-2 bg-yellow-200 rounded-full"
+                className="absolute w-1.5 h-1.5 bg-yellow-100 rounded-full"
                 style={{
                   left: '50%',
                   top: '50%',
                 }}
                 animate={{
-                  x: Math.cos(i * 45 * Math.PI / 180) * 40,
-                  y: Math.sin(i * 45 * Math.PI / 180) * 40,
+                  x: Math.cos(i * 30 * Math.PI / 180) * 50,
+                  y: Math.sin(i * 30 * Math.PI / 180) * 50,
                   opacity: [0, 1, 0],
-                  scale: [0, 1.5, 0],
+                  scale: [0, 2, 0],
                 }}
                 transition={{
-                  duration: 2,
+                  duration: 1.8,
                   repeat: Infinity,
-                  delay: i * 0.1,
+                  delay: i * 0.08,
                   ease: "easeOut",
                 }}
               />

@@ -43,20 +43,21 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
     const body = celestialBodies.find(b => b.id === bodyId);
     if (!body) return;
     
-    // Clear any existing selection first
+    // Close any existing details modal
     set({ selectedBody: null });
     
+    const state = get();
     set({
       targetPosition: { 
         x: body.position_x, 
         y: body.position_y, 
-        z: 20 // Closer zoom for better focus
+        z: state.targetPosition.z // Keep current zoom level
       },
       viewMode: 'focused',
       isAnimating: true
     });
     
-    // Set selection after a brief delay to ensure animation starts
+    // Select for bright effect after animation starts
     setTimeout(() => {
       set({ selectedBody: bodyId });
     }, 100);

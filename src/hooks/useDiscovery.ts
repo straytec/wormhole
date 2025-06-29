@@ -9,28 +9,26 @@ export const useDiscovery = () => {
     setSelectedBody, 
     setIsAnimating, 
     setViewMode,
-    cameraPosition 
+    cameraPosition,
+    targetPosition
   } = useUniverseStore();
 
-  const animateToBody = (body: any, zoomLevel: number = 25) => {
-    // Clear any existing selection first
+  const animateToBody = (body: any) => {
+    // Close any existing details modal
     setSelectedBody(null);
     
-    // Sync camera position with current target position
-    setCameraPosition(cameraPosition);
-    
-    // Set the target directly to the body
+    // Center on the body without changing zoom level
     setTargetPosition({
       x: body.position_x,
       y: body.position_y,
-      z: zoomLevel,
+      z: targetPosition.z, // Keep current zoom level
     });
     
     // Start animation and set view mode
     setIsAnimating(true);
     setViewMode('focused');
     
-    // Select the body after a short delay to ensure animation starts
+    // Select the body after animation starts to show bright effect
     setTimeout(() => {
       setSelectedBody(body.id);
     }, 100);
@@ -41,11 +39,10 @@ export const useDiscovery = () => {
   const discoverRandom = () => {
     if (celestialBodies.length === 0) return;
 
-    // Pick a random celestial body
     const randomIndex = Math.floor(Math.random() * celestialBodies.length);
     const randomBody = celestialBodies[randomIndex];
 
-    return animateToBody(randomBody, 20);
+    return animateToBody(randomBody);
   };
 
   const discoverByType = (contentType: string) => {
@@ -53,7 +50,7 @@ export const useDiscovery = () => {
     if (bodiesOfType.length === 0) return;
 
     const randomBody = bodiesOfType[Math.floor(Math.random() * bodiesOfType.length)];
-    return animateToBody(randomBody, 25);
+    return animateToBody(randomBody);
   };
 
   const discoverHighImpact = () => {
@@ -61,7 +58,7 @@ export const useDiscovery = () => {
     if (highImpactBodies.length === 0) return discoverRandom();
 
     const randomBody = highImpactBodies[Math.floor(Math.random() * highImpactBodies.length)];
-    return animateToBody(randomBody, 18);
+    return animateToBody(randomBody);
   };
 
   const discoverOldest = () => {
@@ -71,7 +68,7 @@ export const useDiscovery = () => {
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     )[0];
 
-    return animateToBody(oldestBody, 22);
+    return animateToBody(oldestBody);
   };
 
   const discoverNewest = () => {
@@ -81,7 +78,7 @@ export const useDiscovery = () => {
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )[0];
 
-    return animateToBody(newestBody, 22);
+    return animateToBody(newestBody);
   };
 
   return {
