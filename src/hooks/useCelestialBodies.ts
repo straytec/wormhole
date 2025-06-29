@@ -159,6 +159,7 @@ export const useCreateCelestialBody = () => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const { setTargetPosition, setIsAnimating, setViewMode, setSelectedBody } = useUniverseStore();
+  const [newBodyId, setNewBodyId] = React.useState<string | null>(null);
 
   return useMutation({
     mutationFn: async (data: CreateCelestialBodyData) => {
@@ -196,9 +197,12 @@ export const useCreateCelestialBody = () => {
       if (error) throw error;
       return result as CelestialBody;
     },
-    onSuccess: () => {
+    onSuccess: (newBody) => {
       // Invalidate and refetch celestial bodies
       queryClient.invalidateQueries({ queryKey: ['celestial-bodies', user?.id] });
+      
+      // Set the new body ID for constellation birth effect
+      setNewBodyId(newBody.id);
       
       // Dramatic camera movement to the new celestial body
       setTimeout(() => {
@@ -213,6 +217,8 @@ export const useCreateCelestialBody = () => {
         // Select the new body after animation
         setTimeout(() => {
           setSelectedBody(newBody.id);
+          // Clear the new body ID after effects complete
+          setTimeout(() => setNewBodyId(null), 1000);
         }, 1500);
       }, 500); // Small delay to let the query update
     },

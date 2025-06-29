@@ -9,6 +9,11 @@ import { UniverseControls } from './UniverseControls';
 import { CosmicPhenomena } from './CosmicPhenomena';
 import { useCameraAnimation } from '../../../hooks/useCameraAnimation';
 import { useDragging } from '../../../hooks/useDragging';
+import { ConstellationLines } from '../../constellation/components/ConstellationLines';
+import { ConstellationBirthEffect } from '../../constellation/components/ConstellationBirthEffect';
+import { ConstellationInfoPanel } from '../../constellation/components/ConstellationInfoPanel';
+import { ConstellationAtlas } from '../../constellation/components/ConstellationAtlas';
+import { useConstellationInteraction } from '../../constellation/hooks/useConstellationInteraction';
 
 export const UniverseCanvas: React.FC = () => {
   const { 
@@ -28,6 +33,20 @@ export const UniverseCanvas: React.FC = () => {
     resetView
   } = useUniverseStore();
   const { data: celestialBodies = [], isLoading } = useCelestialBodies();
+  
+  // Constellation interaction
+  const {
+    activeConstellationId,
+    selectedConstellation,
+    showAtlas,
+    handleBodyClick: handleConstellationBodyClick,
+    handleCenterConstellation,
+    handleNavigateToBody,
+    handleClosePanel,
+    handleOpenAtlas,
+    handleCloseAtlas,
+    handleNavigateToConstellation,
+  } = useConstellationInteraction();
   
   // Use camera animation hook
   const animatedPosition = useCameraAnimation(cameraPosition, targetPosition, isAnimating, setIsAnimating);
@@ -77,7 +96,8 @@ export const UniverseCanvas: React.FC = () => {
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleBodyClick = (bodyId: string) => {
-    focusOnBody(bodyId, celestialBodies);
+    // Handle both regular focus and constellation interaction
+    handleConstellationBodyClick(bodyId, celestialBodies);
   };
 
   const handleZoomToContent = (contentType: string) => {
@@ -182,6 +202,9 @@ export const UniverseCanvas: React.FC = () => {
           >
             {/* Cosmic Phenomena (background groupings) */}
             <CosmicPhenomena celestialBodies={celestialBodies} />
+            
+            {/* Constellation Lines */}
+            <ConstellationLines activeConstellationId={activeConstellationId} />
             
             {/* Individual Celestial Bodies */}
             {celestialBodies.map((body) => (
@@ -320,6 +343,7 @@ export const UniverseCanvas: React.FC = () => {
       <UniverseControls 
         celestialBodies={celestialBodies}
         onZoomToContent={handleZoomToContent}
+        onOpenAtlas={handleOpenAtlas}
       />
 
       {/* Premium Portal (subtle) */}
@@ -343,6 +367,24 @@ export const UniverseCanvas: React.FC = () => {
           onClose={() => setSelectedBody(null)}
         />
       )}
+
+      {/* Constellation Info Panel */}
+      <ConstellationInfoPanel
+        constellation={selectedConstellation}
+        onClose={handleClosePanel}
+        onCenterConstellation={handleCenterConstellation}
+        onNavigateToBody={(bodyId) => handleNavigateToBody(bodyId, celestialBodies)}
+      />
+
+      {/* Constellation Atlas */}
+      <ConstellationAtlas
+        isOpen={showAtlas}
+        onClose={handleCloseAtlas}
+        onNavigateToConstellation={handleNavigateToConstellation}
+      />
+
+      {/* Constellation Birth Effect */}
+      <ConstellationBirthEffect />
     </div>
   );
 };

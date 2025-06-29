@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut } from 'lucide-react';
+import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useUniverseStore } from '../../../stores/universe';
 import { CelestialBody } from '../../../hooks/useCelestialBodies';
@@ -9,11 +9,13 @@ import { DiscoveryModal } from './DiscoveryModal';
 interface UniverseControlsProps {
   celestialBodies: CelestialBody[];
   onZoomToContent: (contentType: string) => void;
+  onOpenAtlas: () => void;
 }
 
 export const UniverseControls: React.FC<UniverseControlsProps> = ({
   celestialBodies,
   onZoomToContent,
+  onOpenAtlas,
 }) => {
   const { 
     setAddingContent, 
@@ -54,6 +56,22 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
     <>
       {/* Main Action Buttons - Bottom Right */}
       <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-30">
+        {/* Constellation Atlas Button */}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button
+            variant="stellar"
+            size="lg"
+            onClick={onOpenAtlas}
+            className="w-16 h-16 rounded-full p-0 shadow-2xl border-2 border-stellar-300"
+            title="Open Constellation Atlas"
+          >
+            <Telescope className="w-8 h-8" />
+          </Button>
+        </motion.div>
+
         {/* Discover Button */}
         <motion.div
           whileHover={{ scale: 1.1 }}
