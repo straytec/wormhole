@@ -22,10 +22,11 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
   const { focusedBody } = useUniverseStore();
   const isFocused = focusedBody === body.id;
   
+  // Calculate baseSize and brightness at component level for global access
+  const baseSize = Math.max(body.visual_attributes.size * 30, 20);
+  const brightness = body.visual_attributes.brightness;
+  
   const getContentTypeVisualization = () => {
-    const baseSize = Math.max(body.visual_attributes.size * 30, 20);
-    const brightness = body.visual_attributes.brightness;
-    
     switch (body.content_type) {
       case 'movie':
         return {
