@@ -24,7 +24,11 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
   } = useDiscovery();
 
   const handleDiscover = (discoveryFn: () => any) => {
-    discoveryFn();
+    const discoveredBody = discoveryFn();
+    if (discoveredBody) {
+      // Show a brief notification about what was discovered
+      console.log('Discovered:', discoveredBody.title);
+    }
     onClose();
   };
 

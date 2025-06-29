@@ -53,7 +53,18 @@ export const UniverseCanvas: React.FC = () => {
   } = useConstellationInteraction();
   
   // Use camera animation hook
-  const animatedPosition = useCameraAnimation(cameraPosition, targetPosition, isAnimating, setIsAnimating);
+  const animatedPosition = useCameraAnimation(
+    cameraPosition, 
+    targetPosition, 
+    isAnimating, 
+    (animating) => {
+      setIsAnimating(animating);
+      // Clear selection when animation completes and we're not focusing on a specific body
+      if (!animating && viewMode === 'overview') {
+        setTimeout(() => setSelectedBody(null), 500);
+      }
+    }
+  );
   
   // Use dragging hook
   const {

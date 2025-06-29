@@ -49,7 +49,7 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
       targetPosition: { 
         x: body.position_x, 
         y: body.position_y, 
-        z: 30 
+        z: 20 // Closer zoom for better focus
       },
       selectedBody: bodyId,
       viewMode: 'focused',

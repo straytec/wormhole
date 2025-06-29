@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CelestialBody } from '../../../hooks/useCelestialBodies';
+import { useUniverseStore } from '../../../stores/universe';
 
 interface EnhancedCelestialBodyProps {
   body: CelestialBody;
@@ -17,6 +18,9 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
   onClick,
   scale,
 }) => {
+  const { selectedBody } = useUniverseStore();
+  const isDiscovered = selectedBody === body.id;
+  
   const getContentTypeVisualization = () => {
     const baseSize = Math.max(body.visual_attributes.size * 30, 20);
     const brightness = body.visual_attributes.brightness;
@@ -331,12 +335,71 @@ export const EnhancedCelestialBody: React.FC<EnhancedCelestialBodyProps> = ({
           transition-all duration-300 relative group
           ${isSelected ? 'ring-4 ring-stellar-400 ring-opacity-60 rounded-full' : ''}
           ${isInConstellation ? 'ring-2 ring-white/40 rounded-full' : ''}
+          ${isDiscovered ? 'ring-4 ring-yellow-300 ring-opacity-80 rounded-full' : ''}
         `}
         style={{
-          filter: `drop-shadow(${visualization.glow})`,
+          filter: `drop-shadow(${visualization.glow}) ${isDiscovered ? 'brightness(1.8) saturate(1.5)' : ''}`,
         }}
       >
         {visualization.component}
+        
+        {/* Discovery Highlight Effect */}
+        {isDiscovered && (
+          <>
+            {/* Pulsing bright ring */}
+            <motion.div
+              className="absolute inset-0 border-4 border-yellow-300 rounded-full"
+              animate={{
+                scale: [1, 1.8, 1],
+                opacity: [0.8, 0.2, 0.8],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            
+            {/* Bright flash effect */}
+            <motion.div
+              className="absolute inset-0 bg-yellow-200/40 rounded-full"
+              initial={{ scale: 0, opacity: 1 }}
+              animate={{ 
+                scale: [0, 3, 0],
+                opacity: [1, 0.3, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatDelay: 1,
+              }}
+            />
+            
+            {/* Sparkle particles */}
+            {Array.from({ length: 8 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 bg-yellow-200 rounded-full"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                }}
+                animate={{
+                  x: Math.cos(i * 45 * Math.PI / 180) * 40,
+                  y: Math.sin(i * 45 * Math.PI / 180) * 40,
+                  opacity: [0, 1, 0],
+                  scale: [0, 1.5, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                  ease: "easeOut",
+                }}
+              />
+            ))}
+          </>
+        )}
         
         {/* Singularity effect overlay */}
         {body.is_singularity && (
