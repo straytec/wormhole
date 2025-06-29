@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { CelestialBody } from '../hooks/useCelestialBodies';
 
 interface UniverseState {
   isAddingContent: boolean;
@@ -20,6 +21,7 @@ interface UniverseState {
   setViewMode: (mode: 'overview' | 'focused' | 'zone') => void;
   setSearchQuery: (query: string) => void;
   simpleFocusOnBody: (bodyId: string) => void;
+  focusOnBody: (bodyId: string, bodies: CelestialBody[]) => void;
   resetView: () => void;
   discover: () => void;
    closeDetailsModal: () => void;
@@ -47,6 +49,22 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
   simpleFocusOnBody: (bodyId) => {
     // Simply set the focused body for brightness effect
     set({ focusedBody: bodyId });
+  },
+  focusOnBody: (bodyId, bodies) => {
+    const body = bodies.find(b => b.id === bodyId);
+    if (!body) return;
+    
+    set({
+      targetPosition: {
+        x: body.position_x,
+        y: body.position_y,
+        z: 25
+      },
+      isAnimating: true,
+      viewMode: 'focused',
+      selectedBody: bodyId,
+      focusedBody: bodyId
+    });
   },
   resetView: () => {
     const state = get();
