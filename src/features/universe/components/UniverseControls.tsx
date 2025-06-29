@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff } from 'lucide-react';
+import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff, LogOut } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useUniverseStore } from '../../../stores/universe';
+import { useAuthStore } from '../../../stores/auth';
 import { CelestialBody } from '../../../hooks/useCelestialBodies';
 import { DiscoveryModal } from './DiscoveryModal';
 
@@ -28,6 +29,7 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
     resetView,
     viewMode
   } = useUniverseStore();
+  const { signOut } = useAuthStore();
   
   const [showDiscovery, setShowDiscovery] = React.useState(false);
 
@@ -152,6 +154,17 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
             ) : (
               <BarChart3 className="w-5 h-5" />
             )}
+          </Button>
+          
+          {/* Logout Button */}
+          <Button
+            variant="stellar"
+            size="sm"
+            onClick={signOut}
+            className="w-12 h-12 rounded-full p-0 border-2 border-red-400/50 hover:border-red-400 hover:bg-red-900/30"
+            title="Sign Out"
+          >
+            <LogOut className="w-5 h-5 text-red-400" />
           </Button>
         </div>
       </div>
