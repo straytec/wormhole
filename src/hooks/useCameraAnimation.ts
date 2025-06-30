@@ -17,7 +17,12 @@ export const useCameraAnimation = (
 
   useEffect(() => {
     if (!isAnimating) {
-      setAnimatedPosition(currentPosition);
+      // Only update if positions are different to avoid unnecessary re-renders
+      if (animatedPosition.x !== currentPosition.x || 
+          animatedPosition.y !== currentPosition.y || 
+          animatedPosition.z !== currentPosition.z) {
+        setAnimatedPosition(currentPosition);
+      }
       return;
     }
 
@@ -73,7 +78,7 @@ export const useCameraAnimation = (
     };
 
     requestAnimationFrame(animate);
-  }, [targetPosition, isAnimating, animatedPosition]);
+  }, [targetPosition, isAnimating]); // Remove animatedPosition from dependencies to prevent loops
 
   return { position: animatedPosition, isZooming };
 };

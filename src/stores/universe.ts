@@ -74,12 +74,6 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
       viewMode: 'overview',
       isAnimating: true
     });
-    
-    // Sync camera position after a brief delay to ensure proper state update
-    setTimeout(() => {
-      const { targetPosition } = get();
-      set({ cameraPosition: targetPosition });
-    }, 50);
   },
   discover: () => {
     // This will be handled by the discovery hook

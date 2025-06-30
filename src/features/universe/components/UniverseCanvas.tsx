@@ -74,10 +74,14 @@ export const UniverseCanvas: React.FC = () => {
   } = useDragging(
     animatedPosition,
     (position) => {
+      // Stop any ongoing animation when dragging starts
+      if (isAnimating) {
+        setIsAnimating(false);
+      }
       setCameraPosition(position);
       setTargetPosition(position);
     },
-    false // Always allow dragging
+    isAnimating
   );
 
   // Add global mouse/touch event listeners

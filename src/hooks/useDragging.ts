@@ -15,7 +15,7 @@ interface DragState {
 export const useDragging = (
   cameraPosition: Position,
   onPositionChange: (position: Position) => void,
-  isAnimating: boolean
+  isAnimating: boolean = false
 ) => {
   const [dragState, setDragState] = useState<DragState>({
     isDragging: false,
@@ -30,14 +30,6 @@ export const useDragging = (
     // Don't start dragging if we're animating or if it's a right click
     if (e.button !== 0) return; // Only allow left mouse button
     
-    // Allow dragging even during animation, but stop the animation
-    if (isAnimating) {
-      // Stop current animation and sync positions
-      const { setIsAnimating, setCameraPosition, targetPosition } = require('../stores/universe').useUniverseStore.getState();
-      setIsAnimating(false);
-      setCameraPosition(targetPosition);
-    }
-
     e.preventDefault();
     
     setDragState({
@@ -76,13 +68,6 @@ export const useDragging = (
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length !== 1) return;
     
-    // Allow dragging even during animation, but stop the animation
-    if (isAnimating) {
-      const { setIsAnimating, setCameraPosition, targetPosition } = require('../stores/universe').useUniverseStore.getState();
-      setIsAnimating(false);
-      setCameraPosition(targetPosition);
-    }
-
     e.preventDefault();
     
     const touch = e.touches[0];
