@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useAuthStore } from './stores/auth';
 import { AuthPage } from './features/auth/pages/AuthPage';
 import { UniversePage } from './features/universe/pages/UniversePage';
+import { ProfilePage } from './features/profile/pages/ProfilePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,10 @@ function App() {
           <Route 
             path="/" 
             element={user ? <UniversePage /> : <Navigate to="/auth" replace />} 
+          />
+          <Route 
+            path="/profile" 
+            element={user ? <ProfilePage /> : <Navigate to="/auth" replace />} 
           />
         </Routes>
       </Router>

@@ -1,12 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff, LogOut, Share2 } from 'lucide-react';
+import { Plus, Dices, Home, Search, Filter, ZoomIn, ZoomOut, Telescope, BarChart3, EyeOff, LogOut, Share2, User } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { useUniverseStore } from '../../../stores/universe';
 import { useAuthStore } from '../../../stores/auth';
 import { CelestialBody } from '../../../hooks/useCelestialBodies';
 import { DiscoveryModal } from './DiscoveryModal';
 import { ShareGalaxyModal } from './ShareGalaxyModal';
+import { useNavigate } from 'react-router-dom';
 
 interface UniverseControlsProps {
   celestialBodies: CelestialBody[];
@@ -34,6 +35,7 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
   
   const [showDiscovery, setShowDiscovery] = React.useState(false);
   const [showShareModal, setShowShareModal] = React.useState(false);
+  const navigate = useNavigate();
 
   const contentTypeCounts = celestialBodies.reduce((acc, body) => {
     acc[body.content_type] = (acc[body.content_type] || 0) + 1;
@@ -182,6 +184,17 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
             ) : (
               <BarChart3 className="w-5 h-5" />
             )}
+          </Button>
+          
+          {/* Profile Button */}
+          <Button
+            variant="stellar"
+            size="sm"
+            onClick={() => navigate('/profile')}
+            className="w-12 h-12 rounded-full p-0"
+            title="View Profile"
+          >
+            <User className="w-5 h-5" />
           </Button>
           
           {/* Logout Button */}
