@@ -28,7 +28,15 @@ export const useDragging = (
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     // Don't start dragging if we're animating or if it's a right click
-    if (isAnimating || e.button !== 0) return;
+    if (e.button !== 0) return; // Only allow left mouse button
+    
+    // Allow dragging even during animation, but stop the animation
+    if (isAnimating) {
+      // Stop current animation and sync positions
+      const { setIsAnimating, setCameraPosition, targetPosition } = require('../stores/universe').useUniverseStore.getState();
+      setIsAnimating(false);
+      setCameraPosition(targetPosition);
+    }
 
     e.preventDefault();
     
@@ -37,7 +45,7 @@ export const useDragging = (
       startPosition: { x: e.clientX, y: e.clientY },
       startCameraPosition: { ...cameraPosition }
     });
-  }, [cameraPosition, isAnimating]);
+  }, [cameraPosition]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const currentDragState = dragStateRef.current;
@@ -66,7 +74,14 @@ export const useDragging = (
 
   // Touch events for mobile support
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (isAnimating || e.touches.length !== 1) return;
+    if (e.touches.length !== 1) return;
+    
+    // Allow dragging even during animation, but stop the animation
+    if (isAnimating) {
+      const { setIsAnimating, setCameraPosition, targetPosition } = require('../stores/universe').useUniverseStore.getState();
+      setIsAnimating(false);
+      setCameraPosition(targetPosition);
+    }
 
     e.preventDefault();
     
@@ -76,7 +91,7 @@ export const useDragging = (
       startPosition: { x: touch.clientX, y: touch.clientY },
       startCameraPosition: { ...cameraPosition }
     });
-  }, [cameraPosition, isAnimating]);
+  }, [cameraPosition]);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
     const currentDragState = dragStateRef.current;

@@ -22,7 +22,7 @@ export const useCameraAnimation = (
     }
 
     // Detect if this is a zoom operation (z-axis change)
-    const isZoomOperation = Math.abs(targetPosition.z - currentPosition.z) > 5;
+    const isZoomOperation = Math.abs(targetPosition.z - animatedPosition.z) > 5;
     setIsZooming(isZoomOperation);
 
     // Start animation
@@ -73,7 +73,7 @@ export const useCameraAnimation = (
     };
 
     requestAnimationFrame(animate);
-  }, [targetPosition, isAnimating]);
+  }, [targetPosition, isAnimating, animatedPosition]);
 
   return { position: animatedPosition, isZooming };
 };

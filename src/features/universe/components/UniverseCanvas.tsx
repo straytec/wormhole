@@ -77,7 +77,7 @@ export const UniverseCanvas: React.FC = () => {
       setCameraPosition(position);
       setTargetPosition(position);
     },
-    isAnimating
+    false // Always allow dragging
   );
 
   // Add global mouse/touch event listeners

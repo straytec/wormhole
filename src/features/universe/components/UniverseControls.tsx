@@ -41,20 +41,26 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
   }, {} as Record<string, number>);
 
   const handleZoomIn = () => {
-    const currentPosition = useUniverseStore.getState().cameraPosition;
+    const state = useUniverseStore.getState();
+    const currentPosition = state.isAnimating ? state.targetPosition : state.cameraPosition;
+    
     setTargetPosition({
       ...currentPosition,
       z: Math.max(currentPosition.z * 0.7, 15)
     });
+    setCameraPosition(currentPosition); // Sync current position
     setIsAnimating(true);
   };
 
   const handleZoomOut = () => {
-    const currentPosition = useUniverseStore.getState().cameraPosition;
+    const state = useUniverseStore.getState();
+    const currentPosition = state.isAnimating ? state.targetPosition : state.cameraPosition;
+    
     setTargetPosition({
       ...currentPosition,
       z: Math.min(currentPosition.z * 1.4, 200)
     });
+    setCameraPosition(currentPosition); // Sync current position
     setIsAnimating(true);
   };
 
