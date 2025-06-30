@@ -47,6 +47,27 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onToggleMode }) => {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-md mx-auto"
     >
+          <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 2, duration: 1 }}
+      className="fixed bottom-4 right-32 z-20"
+    >
+      <a
+        href="https://bolt.new"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-center gap-2 px-3 py-2 bg-cosmic-900/90 backdrop-blur-sm border border-cosmic-600 rounded-lg hover:border-stellar-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+      >
+      <div className="flex items-center gap-2">
+        <img
+          src="/bolt_black_circle.png"
+          alt="Bolt Icon"
+          className="w-20 h-20"
+        />
+      </div>
+    </a>
+   </motion.div>
       <div className="bg-cosmic-900/80 backdrop-blur-lg border border-cosmic-700 rounded-xl p-8 shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
