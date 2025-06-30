@@ -370,8 +370,13 @@ export const ProfilePage: React.FC = () => {
             </motion.div>
 
             <motion.div
+                initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="fixed bottom-4 right-32 z-20"
+              >
               <a
-               href="https://bolt.new"
+                href="https://bolt.new"
                target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-2 px-3 py-2 bg-cosmic-900/90 backdrop-blur-sm border border-cosmic-600 rounded-lg hover:border-stellar-400 transition-all duration-300 shadow-lg hover:shadow-xl"
