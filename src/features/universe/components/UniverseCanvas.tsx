@@ -307,12 +307,11 @@ export const UniverseCanvas: React.FC = () => {
           className="group flex items-center gap-2 px-3 py-2 bg-cosmic-900/90 backdrop-blur-sm border border-cosmic-600 rounded-lg hover:border-stellar-400 transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-gradient-to-r from-stellar-400 to-cosmic-400 rounded-sm flex items-center justify-center">
-              <span className="text-white text-xs font-bold">⚡</span>
-            </div>
-            <span className="text-cosmic-200 text-sm font-medium group-hover:text-white transition-colors">
-              Built with Bolt.new
-            </span>
+          <img
+            src="/bolt_black_circle.png"
+            alt="Bolt Icon"
+            className="w-20 h-20"
+           />
           </div>
         </a>
       </motion.div>
