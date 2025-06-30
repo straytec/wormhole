@@ -369,6 +369,24 @@ export const ProfilePage: React.FC = () => {
               </div>
             </motion.div>
 
+            <motion.div
+              <a
+               href="https://bolt.new"
+               target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 px-3 py-2 bg-cosmic-900/90 backdrop-blur-sm border border-cosmic-600 rounded-lg hover:border-stellar-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+                 >
+               <div className="flex items-center gap-2">
+                  <img
+                 src="/bolt_black_circle.png"
+                alt="Bolt Icon"
+                className="w-20 h-20"
+                  />
+                   </div>
+              </a>
+          </motion.div>
+
+          
             {/* Universe Stats */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
