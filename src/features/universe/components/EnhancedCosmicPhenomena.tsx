@@ -4,10 +4,12 @@ import { CelestialBody } from '../../../hooks/useCelestialBodies';
 
 interface EnhancedCosmicPhenomenaProps {
   celestialBodies: CelestialBody[];
+  isZooming?: boolean;
 }
 
 export const EnhancedCosmicPhenomena: React.FC<EnhancedCosmicPhenomenaProps> = ({
   celestialBodies,
+  isZooming = false,
 }) => {
   // Group celestial bodies by content type and creator for enhanced visualizations
   const groupedBodies = React.useMemo(() => {
@@ -146,7 +148,7 @@ export const EnhancedCosmicPhenomena: React.FC<EnhancedCosmicPhenomenaProps> = (
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Enhanced Content Type Zones */}
-      {contentZones.map((zoneData) => (
+      {!isZooming && contentZones.map((zoneData) => (
         <motion.div
           key={`zone-${zoneData.type}`}
           className={`absolute rounded-full bg-gradient-radial ${zoneData.zone.color}`}
@@ -284,7 +286,7 @@ export const EnhancedCosmicPhenomena: React.FC<EnhancedCosmicPhenomenaProps> = (
       </svg>
 
       {/* Enhanced Cosmic Dust and Ambient Effects */}
-      {Array.from({ length: 40 }).map((_, i) => (
+      {!isZooming && Array.from({ length: isZooming ? 10 : 40 }).map((_, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-stellar-300/40 rounded-full"

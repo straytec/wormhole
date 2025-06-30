@@ -54,7 +54,7 @@ export const UniverseCanvas: React.FC = () => {
   } = useConstellationInteraction();
   
   // Use camera animation hook
-  const animatedPosition = useCameraAnimation(
+  const { position: animatedPosition, isZooming } = useCameraAnimation(
     cameraPosition, 
     targetPosition, 
     isAnimating, 
@@ -210,14 +210,16 @@ export const UniverseCanvas: React.FC = () => {
             className="absolute inset-0"
             style={{
               transform: `translate(${-animatedPosition.x * 2}px, ${-animatedPosition.y * 2}px) scale(${100 / animatedPosition.z})`,
-              transition: isAnimating ? 'transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+              transition: isAnimating ? 
+                (isZooming ? 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)' : 'transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)') 
+                : 'none',
             }}
           >
             {/* Enhanced Cosmic Phenomena (background groupings) */}
-            <EnhancedCosmicPhenomena celestialBodies={celestialBodies} />
+            <EnhancedCosmicPhenomena celestialBodies={celestialBodies} isZooming={isZooming} />
             
             {/* Constellation Lines */}
-            <ConstellationLines activeConstellationId={activeConstellationId} />
+            <ConstellationLines activeConstellationId={activeConstellationId} isZooming={isZooming} />
             
             {/* Galactic Collision Effects */}
             <GalacticCollisionEffect />
@@ -226,6 +228,24 @@ export const UniverseCanvas: React.FC = () => {
             {celestialBodies.map((body) => {
               const isInConstellation = activeConstellationId && 
                 selectedConstellation?.celestialBodies.includes(body.id);
+              
+              // Reduce visual complexity during zoom operations
+              const shouldRenderBody = !isZooming || body.has_impact || body.is_singularity || 
+                                     selectedBody === body.id || focusedBody === body.id;
+              
+              if (!shouldRenderBody) {
+                return (
+                  <div
+                    key={body.id}
+                    className="absolute w-2 h-2 bg-white/60 rounded-full"
+                    style={{
+                      left: `${50 + (body.position_x * 0.5)}%`,
+                      top: `${50 + (body.position_y * 0.5)}%`,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                );
+              }
               
               return (
                 <EnhancedCelestialBody

@@ -6,10 +6,12 @@ import { useUniverseStore } from '../../../stores/universe';
 
 interface ConstellationLinesProps {
   activeConstellationId?: string;
+  isZooming?: boolean;
 }
 
 export const ConstellationLines: React.FC<ConstellationLinesProps> = ({
   activeConstellationId,
+  isZooming = false,
 }) => {
   const { data: celestialBodies = [] } = useCelestialBodies();
   const { constellations, getConstellationLines } = useConstellations();
@@ -36,7 +38,8 @@ export const ConstellationLines: React.FC<ConstellationLinesProps> = ({
         const lines = getConstellationLines(constellation.id);
         const visibility = getLineVisibility(constellation.id);
         
-        if (visibility <= 0) return null;
+        // Hide constellation lines during zoom operations unless it's the active constellation
+        if (visibility <= 0 || (isZooming && activeConstellationId !== constellation.id)) return null;
 
         return lines.map((line, lineIndex) => {
           const fromBody = celestialBodies.find(b => b.id === line.from);

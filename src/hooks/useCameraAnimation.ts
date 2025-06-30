@@ -13,6 +13,7 @@ export const useCameraAnimation = (
   setIsAnimating: (animating: boolean) => void
 ) => {
   const [animatedPosition, setAnimatedPosition] = useState(currentPosition);
+  const [isZooming, setIsZooming] = useState(false);
 
   useEffect(() => {
     if (!isAnimating) {
@@ -20,10 +21,19 @@ export const useCameraAnimation = (
       return;
     }
 
+    // Detect if this is a zoom operation (z-axis change)
+    const isZoomOperation = Math.abs(targetPosition.z - currentPosition.z) > 5;
+    setIsZooming(isZoomOperation);
+
     // Start animation
     const startTime = Date.now();
-    const duration = 1500; // 1.5 seconds for smooth but not too slow animation
+    const duration = isZoomOperation ? 1000 : 1500; // Faster zoom, normal pan
     const startPosition = { ...animatedPosition };
+    
+    // Reduce frame rate during zoom operations for better performance
+    const frameRate = isZoomOperation ? 30 : 60; // 30fps for zoom, 60fps for pan
+    const frameInterval = 1000 / frameRate;
+    let lastFrameTime = 0;
 
     const animate = () => {
       const elapsed = Date.now() - startTime;
@@ -33,6 +43,16 @@ export const useCameraAnimation = (
       const easeInOutCubic = progress < 0.5 
         ? 4 * progress * progress * progress 
         : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      // Throttle frame updates during zoom operations
+      const now = Date.now();
+      if (isZoomOperation && now - lastFrameTime < frameInterval) {
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        }
+        return;
+      }
+      lastFrameTime = now;
 
       const newPosition = {
         x: startPosition.x + (targetPosition.x - startPosition.x) * easeInOutCubic,
@@ -48,11 +68,12 @@ export const useCameraAnimation = (
         // Animation complete
         setAnimatedPosition(targetPosition);
         setIsAnimating(false);
+        setIsZooming(false);
       }
     };
 
     requestAnimationFrame(animate);
   }, [targetPosition, isAnimating]);
 
-  return animatedPosition;
+  return { position: animatedPosition, isZooming };
 };
