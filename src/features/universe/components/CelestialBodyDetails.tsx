@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Calendar, User, Tag, Zap, Heart, Focus } from 'lucide-react';
-import { useCelestialBodies } from '../../../hooks/useCelestialBodies';
+import { X, Calendar, User, Tag, Zap, Heart, Focus, Trash2 } from 'lucide-react';
+import { useCelestialBodies, useDeleteCelestialBody } from '../../../hooks/useCelestialBodies';
 import { useUniverseStore } from '../../../stores/universe';
 import { Button } from '../../../components/ui/Button';
 
@@ -15,8 +15,10 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
   onClose,
 }) => {
   const { data: celestialBodies = [] } = useCelestialBodies();
+  const deleteCelestialBody = useDeleteCelestialBody();
   const { simpleFocusOnBody, setSelectedBody } = useUniverseStore();
   const body = celestialBodies.find(b => b.id === bodyId);
+  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
   if (!body) return null;
 
@@ -29,6 +31,15 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
     handleClose(); // Close the popup immediately
     simpleFocusOnBody(bodyId); // Make the body bright
   };
+
+  const handleDelete = () => {
+    deleteCelestialBody.mutate(bodyId, {
+      onSuccess: () => {
+        onClose(); // Close modal after successful deletion
+      }
+    });
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -88,15 +99,26 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
           {/* Content */}
           <div className="p-6 space-y-4">
             {/* Focus Button */}
-            <Button
-              variant="cosmic"
-              size="sm"
-              onClick={handleFocus}
-              className="w-full"
-            >
-              <Focus className="w-4 h-4 mr-2" />
-              Focus on this body
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                variant="cosmic"
+                size="sm"
+                onClick={handleFocus}
+                className="flex-1"
+              >
+                <Focus className="w-4 h-4 mr-2" />
+                Focus on this body
+              </Button>
+              
+              <Button
+                variant="stellar"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="px-4 border-red-400/50 hover:border-red-400 hover:bg-red-900/30 text-red-400 hover:text-red-300"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
 
             {/* Special Properties */}
             {(body.is_singularity || body.has_impact) && (
@@ -177,6 +199,72 @@ export const CelestialBodyDetails: React.FC<CelestialBodyDetailsProps> = ({
             )}
           </div>
         </motion.div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-void-950/80 backdrop-blur-sm flex items-center justify-center z-10"
+            onClick={() => setShowDeleteConfirm(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-cosmic-900 border border-red-400/50 rounded-xl p-6 max-w-sm mx-4 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center">
+                <div className="w-12 h-12 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Trash2 className="w-6 h-6 text-red-400" />
+                </div>
+                
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Delete Celestial Body
+                </h3>
+                
+                <p className="text-cosmic-300 text-sm mb-6">
+                  Are you sure you want to delete "{body?.title}"? This action cannot be undone and will remove it from your universe forever.
+                </p>
+                
+                <div className="flex gap-3">
+                  <Button
+                    variant="stellar"
+                    size="sm"
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="flex-1"
+                    disabled={deleteCelestialBody.isPending}
+                  >
+                    Cancel
+                  </Button>
+                  
+                  <Button
+                    variant="cosmic"
+                    size="sm"
+                    onClick={handleDelete}
+                    disabled={deleteCelestialBody.isPending}
+                    className="flex-1 bg-red-600 hover:bg-red-500 border-red-500"
+                  >
+                    {deleteCelestialBody.isPending ? (
+                      <motion.div
+                        className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      />
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </div>
     </>
   );

@@ -225,3 +225,40 @@ export const useCreateCelestialBody = () => {
     },
   });
 };
+
+export const useDeleteCelestialBody = () => {
+  const { user } = useAuthStore();
+  const queryClient = useQueryClient();
+  const { setSelectedBody, setFocusedBody, resetView } = useUniverseStore();
+
+  return useMutation({
+    mutationFn: async (bodyId: string) => {
+      if (!user) throw new Error('User not authenticated');
+
+      const { error } = await supabase
+        .from('celestial_bodies')
+        .delete()
+        .eq('id', bodyId)
+        .eq('user_id', user.id); // Extra security check
+
+      if (error) throw error;
+      return bodyId;
+    },
+    onSuccess: (deletedBodyId) => {
+      // Invalidate and refetch celestial bodies
+      queryClient.invalidateQueries({ queryKey: ['celestial-bodies', user?.id] });
+      
+      // Clear any selection/focus on the deleted body
+      setSelectedBody(null);
+      setFocusedBody(null);
+      
+      // Reset view to overview
+      setTimeout(() => {
+        resetView();
+      }, 300);
+    },
+    onError: (error) => {
+      console.error('Failed to delete celestial body:', error);
+    },
+  });
+};
