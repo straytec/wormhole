@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useUniverseStore } from '../stores/universe';
 
 interface Position {
   x: number;
@@ -14,7 +15,12 @@ export const useCameraAnimation = (
 ) => {
   const [animatedPosition, setAnimatedPosition] = useState(currentPosition);
   const [isZooming, setIsZooming] = useState(false);
+  const { setCameraPosition } = useUniverseStore();
+  
+  // Use ref to track the starting position to avoid dependency issues
+  const startPositionRef = useRef(currentPosition);
 
+  // Sync animatedPosition with currentPosition when not animating
   useEffect(() => {
     if (!isAnimating) {
       // Only update if positions are different to avoid unnecessary re-renders
@@ -23,17 +29,25 @@ export const useCameraAnimation = (
           animatedPosition.z !== currentPosition.z) {
         setAnimatedPosition(currentPosition);
       }
+    }
+  }, [currentPosition, isAnimating, animatedPosition.x, animatedPosition.y, animatedPosition.z]);
+
+  useEffect(() => {
+    if (!isAnimating) {
       return;
     }
 
+    // Capture the starting position when animation begins
+    startPositionRef.current = { ...animatedPosition };
+
     // Detect if this is a zoom operation (z-axis change)
-    const isZoomOperation = Math.abs(targetPosition.z - animatedPosition.z) > 5;
+    const isZoomOperation = Math.abs(targetPosition.z - startPositionRef.current.z) > 5;
     setIsZooming(isZoomOperation);
 
     // Start animation
     const startTime = Date.now();
     const duration = isZoomOperation ? 1000 : 1500; // Faster zoom, normal pan
-    const startPosition = { ...animatedPosition };
+    const startPosition = { ...startPositionRef.current };
     
     // Reduce frame rate during zoom operations for better performance
     const frameRate = isZoomOperation ? 30 : 60; // 30fps for zoom, 60fps for pan
@@ -66,19 +80,23 @@ export const useCameraAnimation = (
       };
 
       setAnimatedPosition(newPosition);
+      
+      // CRITICAL: Update the store's camera position during animation
+      setCameraPosition(newPosition);
 
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
-        // Animation complete
+        // Animation complete - ensure final sync
         setAnimatedPosition(targetPosition);
+        setCameraPosition(targetPosition);
         setIsAnimating(false);
         setIsZooming(false);
       }
     };
 
     requestAnimationFrame(animate);
-  }, [targetPosition, isAnimating]); // Remove animatedPosition from dependencies to prevent loops
+  }, [targetPosition, isAnimating, setCameraPosition, setIsAnimating]);
 
   return { position: animatedPosition, isZooming };
 };
