@@ -35,7 +35,8 @@ export const UniverseCanvas: React.FC = () => {
     viewMode,
     setViewMode,
     focusOnBody,
-    resetView
+    resetView,
+    focusedBody
   } = useUniverseStore();
   const { data: celestialBodies = [], isLoading } = useCelestialBodies();
   
