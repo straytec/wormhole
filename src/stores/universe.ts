@@ -54,14 +54,11 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
     const body = bodies.find(b => b.id === bodyId);
     if (!body) return;
     
-    // Smooth focus with optimized zoom level
-    const optimalZoom = Math.max(20, Math.min(40, 30)); // Dynamic zoom based on content
-    
     set({
       targetPosition: {
         x: body.position_x,
         y: body.position_y,
-        z: optimalZoom
+        z: 25
       },
       isAnimating: true,
       viewMode: 'focused',
@@ -71,13 +68,13 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
   },
   resetView: () => {
     const state = get();
-    // Smooth return to overview with gentle zoom
     set({
+      cameraPosition: state.targetPosition, // Sync current position
       targetPosition: { x: 0, y: 0, z: 100 },
-      isAnimating: true,
-      viewMode: 'overview',
       selectedBody: null,
-      focusedBody: null
+      focusedBody: null,
+      viewMode: 'overview',
+      isAnimating: true
     });
   },
   discover: () => {

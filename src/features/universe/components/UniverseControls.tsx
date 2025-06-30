@@ -41,23 +41,19 @@ export const UniverseControls: React.FC<UniverseControlsProps> = ({
   }, {} as Record<string, number>);
 
   const handleZoomIn = () => {
-    const currentZ = targetPosition.z;
-    const newZ = Math.max(currentZ * 0.8, 15); // Gentler zoom increment
-    
+    setCameraPosition(targetPosition); // Sync positions
     setTargetPosition({
       ...targetPosition,
-      z: newZ
+      z: Math.max(targetPosition.z * 0.7, 15)
     });
     setIsAnimating(true);
   };
 
   const handleZoomOut = () => {
-    const currentZ = targetPosition.z;
-    const newZ = Math.min(currentZ * 1.25, 200); // Gentler zoom increment
-    
+    setCameraPosition(targetPosition); // Sync positions
     setTargetPosition({
       ...targetPosition,
-      z: newZ
+      z: Math.min(targetPosition.z * 1.4, 200)
     });
     setIsAnimating(true);
   };
