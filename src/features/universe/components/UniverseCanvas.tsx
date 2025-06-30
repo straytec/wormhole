@@ -210,7 +210,8 @@ export const UniverseCanvas: React.FC = () => {
             className="absolute inset-0"
             style={{
               transform: `translate(${-animatedPosition.x * 2}px, ${-animatedPosition.y * 2}px) scale(${100 / animatedPosition.z})`,
-              transition: isAnimating ? 'transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+              transformOrigin: 'center center',
+              willChange: isAnimating ? 'transform' : 'auto',
             }}
           >
             {/* Enhanced Cosmic Phenomena (background groupings) */}
